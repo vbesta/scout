@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VBesta Scout — Fotbalová agentura</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #080808;
+  --dark: #111111;
+  --dark2: #181818;
+  --gold: #D4A843;
+  --gold2: #F0C96A;
+  --white: #F5F2EC;
+  --grey: #888;
+  --grey2: #333;
+  --border: rgba(212,168,67,0.2);
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+
+body {
+background: var(–black);
+color: var(–white);
+font-family: ‘Outfit’, sans-serif;
+overflow-x: hidden;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+content: ‘’;
+position: fixed;
+inset: 0;
+background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
+pointer-events: none;
+z-index: 0;
+opacity: 0.4;
+}
+
+/* ── NAV ── */
+nav {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+padding: 20px 60px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: linear-gradient(to bottom, rgba(8,8,8,0.95), transparent);
+backdrop-filter: blur(0px);
+transition: backdrop-filter .3s, background .3s;
+}
+nav.scrolled {
+backdrop-filter: blur(20px);
+background: rgba(8,8,8,0.9);
+border-bottom: 1px solid var(–border);
+}
+.nav-logo svg {
+will-change: transform;
+transform: translateZ(0);
+-webkit-transform: translateZ(0);
+}
+.nav-logo {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 28px;
+letter-spacing: .08em;
+color: var(–gold);
+text-decoration: none;
+}
+.nav-logo span { color: var(–white); }
+.nav-links { display: flex; gap: 36px; }
+.nav-links a {
+color: rgba(245,242,236,0.6);
+text-decoration: none;
+font-size: 13px;
+font-weight: 500;
+letter-spacing: .06em;
+text-transform: uppercase;
+transition: color .2s;
+}
+.nav-links a:hover { color: var(–gold); }
+
+/* ── HERO ── */
+.hero {
+min-height: 100vh;
+display: flex;
+align-items: center;
+position: relative;
+overflow: hidden;
+padding: 120px 60px 80px;
+}
+
+.hero-bg {
+position: absolute;
+inset: 0;
+background:
+radial-gradient(ellipse 60% 70% at 70% 50%, rgba(212,168,67,0.08) 0%, transparent 70%),
+radial-gradient(ellipse 40% 40% at 20% 80%, rgba(212,168,67,0.05) 0%, transparent 60%),
+linear-gradient(160deg, #0d0d0d 0%, #080808 100%);
+}
+
+/* Animated lines */
+.hero-lines {
+position: absolute;
+inset: 0;
+overflow: hidden;
+pointer-events: none;
+}
+.hero-line {
+position: absolute;
+background: linear-gradient(90deg, transparent, rgba(212,168,67,0.15), transparent);
+height: 1px;
+width: 60%;
+animation: lineScan 6s ease-in-out infinite;
+}
+.hero-line:nth-child(1) { top: 25%; animation-delay: 0s; }
+.hero-line:nth-child(2) { top: 50%; animation-delay: 2s; width: 40%; left: 30%; }
+.hero-line:nth-child(3) { top: 75%; animation-delay: 4s; }
+@keyframes lineScan {
+0%, 100% { opacity: 0; transform: translateX(-20%); }
+50% { opacity: 1; transform: translateX(20%); }
+}
+
+.hero-content {
+position: relative;
+z-index: 2;
+max-width: 700px;
+}
+
+.hero-tag {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+background: rgba(212,168,67,0.1);
+border: 1px solid var(–border);
+border-radius: 30px;
+padding: 6px 16px;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: .12em;
+text-transform: uppercase;
+color: var(–gold);
+margin-bottom: 28px;
+animation: fadeUp .8s ease both;
+}
+.hero-tag::before { content: ‘’; width: 6px; height: 6px; border-radius: 50%; background: var(–gold); animation: pulse 2s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+
+.hero-title {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: clamp(64px, 9vw, 130px);
+line-height: .92;
+letter-spacing: .02em;
+color: var(–white);
+margin-bottom: 8px;
+animation: fadeUp .8s .1s ease both;
+}
+.hero-title .gold { color: var(–gold); }
+
+.hero-subtitle {
+font-size: 16px;
+color: rgba(245,242,236,0.5);
+font-weight: 300;
+line-height: 1.7;
+max-width: 480px;
+margin-bottom: 40px;
+animation: fadeUp .8s .2s ease both;
+}
+
+.hero-cta {
+display: flex;
+gap: 14px;
+flex-wrap: wrap;
+animation: fadeUp .8s .3s ease both;
+}
+
+.btn-gold {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+background: var(–gold);
+color: #000;
+padding: 14px 30px;
+border-radius: 4px;
+font-weight: 700;
+font-size: 14px;
+letter-spacing: .06em;
+text-transform: uppercase;
+text-decoration: none;
+transition: all .2s;
+border: none;
+cursor: pointer;
+font-family: ‘Outfit’, sans-serif;
+}
+.btn-gold:hover { background: var(–gold2); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,168,67,0.3); }
+
+.btn-outline {
+display: inline-flex;
+align-items: center;
+gap: 8px;
+background: transparent;
+color: var(–white);
+padding: 14px 30px;
+border-radius: 4px;
+font-weight: 600;
+font-size: 14px;
+letter-spacing: .06em;
+text-transform: uppercase;
+text-decoration: none;
+border: 1px solid rgba(245,242,236,0.2);
+transition: all .2s;
+cursor: pointer;
+font-family: ‘Outfit’, sans-serif;
+}
+.btn-outline:hover { border-color: var(–gold); color: var(–gold); }
+
+/* Hero stats */
+.hero-stats {
+position: absolute;
+right: 60px;
+bottom: 80px;
+display: flex;
+gap: 40px;
+z-index: 2;
+animation: fadeUp .8s .4s ease both;
+}
+.stat { text-align: center; }
+.stat-num {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 48px;
+color: var(–gold);
+line-height: 1;
+letter-spacing: .04em;
+}
+.stat-label { font-size: 11px; color: var(–grey); text-transform: uppercase; letter-spacing: .1em; margin-top: 4px; }
+
+/* Diagonal divider */
+.divider {
+height: 80px;
+background: linear-gradient(to bottom right, var(–black) 49%, var(–dark) 50%);
+margin-top: -1px;
+}
+
+@keyframes fadeUp {
+from { opacity: 0; transform: translateY(30px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION BASE ── */
+section { padding: 100px 60px; position: relative; }
+.section-label {
+font-size: 11px;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: .2em;
+color: var(–gold);
+margin-bottom: 12px;
+}
+.section-title {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: clamp(42px, 5vw, 72px);
+letter-spacing: .03em;
+line-height: 1;
+color: var(–white);
+margin-bottom: 16px;
+}
+.section-sub {
+font-size: 15px;
+color: rgba(245,242,236,0.5);
+font-weight: 300;
+max-width: 500px;
+line-height: 1.7;
+}
+
+/* ── ABOUT / PROFILE ── */
+#o-nas { background: var(–dark); }
+
+.about-grid {
+display: grid;
+grid-template-columns: 380px 1fr;
+gap: 80px;
+align-items: center;
+max-width: 1100px;
+margin: 0 auto;
+}
+
+.profile-card {
+position: relative;
+}
+
+.profile-img-wrap {
+position: relative;
+width: 100%;
+aspect-ratio: 3/4;
+border-radius: 8px;
+overflow: hidden;
+background: var(–dark2);
+border: 1px solid var(–border);
+}
+
+/* Placeholder foto */
+.profile-img-placeholder {
+width: 100%;
+height: 100%;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 16px;
+background: linear-gradient(160deg, #1a1a1a, #111);
+cursor: pointer;
+transition: background .2s;
+position: relative;
+}
+.profile-img-placeholder:hover { background: linear-gradient(160deg, #222, #151515); }
+.profile-img-placeholder .upload-icon { font-size: 48px; opacity: .3; }
+.profile-img-placeholder .upload-text { font-size: 13px; color: var(–grey); text-align: center; line-height: 1.5; }
+.profile-img-placeholder .upload-btn {
+background: var(–border);
+border: 1px solid var(–gold);
+color: var(–gold);
+padding: 8px 20px;
+border-radius: 4px;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: .08em;
+text-transform: uppercase;
+cursor: pointer;
+font-family: ‘Outfit’, sans-serif;
+transition: all .2s;
+}
+.profile-img-placeholder .upload-btn:hover { background: var(–gold); color: #000; }
+#profile-img-input { display: none; }
+
+.profile-img-wrap img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+display: block;
+}
+
+.profile-corner {
+position: absolute;
+top: -12px;
+right: -12px;
+background: var(–gold);
+color: #000;
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 13px;
+letter-spacing: .1em;
+padding: 6px 14px;
+border-radius: 3px;
+}
+
+.profile-info {
+margin-top: 16px;
+padding: 16px;
+background: var(–dark2);
+border: 1px solid var(–border);
+border-radius: 6px;
+}
+.profile-name {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 28px;
+letter-spacing: .06em;
+color: var(–white);
+}
+.profile-role { font-size: 12px; color: var(–gold); text-transform: uppercase; letter-spacing: .1em; margin-top: 2px; }
+.profile-social {
+display: flex;
+gap: 10px;
+margin-top: 12px;
+}
+.social-link {
+display: flex;
+align-items: center;
+gap: 6px;
+padding: 6px 12px;
+background: rgba(212,168,67,0.08);
+border: 1px solid var(–border);
+border-radius: 4px;
+font-size: 12px;
+color: var(–grey);
+text-decoration: none;
+transition: all .2s;
+}
+.social-link:hover { color: var(–gold); border-color: var(–gold); }
+
+.about-text h2 { margin-bottom: 24px; }
+.about-text p { font-size: 15px; color: rgba(245,242,236,0.65); line-height: 1.85; margin-bottom: 20px; font-weight: 300; }
+
+.about-features {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 14px;
+margin-top: 36px;
+}
+.feature {
+display: flex;
+align-items: flex-start;
+gap: 12px;
+padding: 16px;
+background: var(–black);
+border: 1px solid var(–border);
+border-radius: 6px;
+transition: border-color .2s;
+}
+.feature:hover { border-color: rgba(212,168,67,0.5); }
+.feature-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.feature-text h4 { font-size: 14px; font-weight: 600; color: var(–white); margin-bottom: 4px; }
+.feature-text p { font-size: 12px; color: var(–grey); line-height: 1.5; }
+
+/* ── REVIEWS ── */
+#recenze { background: var(–black); }
+
+.reviews-header {
+display: flex;
+align-items: flex-end;
+justify-content: space-between;
+margin-bottom: 50px;
+max-width: 1100px;
+margin-left: auto;
+margin-right: auto;
+}
+
+.reviews-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 20px;
+max-width: 1100px;
+margin: 0 auto;
+}
+
+.review-card {
+background: var(–dark);
+border: 1px solid var(–border);
+border-radius: 8px;
+padding: 26px;
+position: relative;
+transition: all .25s;
+animation: fadeUp .6s ease both;
+}
+.review-card:hover { border-color: rgba(212,168,67,0.4); transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+
+.review-quote {
+font-size: 36px;
+color: var(–gold);
+opacity: .3;
+line-height: 1;
+margin-bottom: 14px;
+font-family: Georgia, serif;
+}
+.review-text { font-size: 14px; color: rgba(245,242,236,0.7); line-height: 1.75; font-weight: 300; margin-bottom: 20px; }
+.review-footer { display: flex; align-items: center; gap: 12px; }
+.review-avatar {
+width: 38px; height: 38px; border-radius: 50%;
+background: linear-gradient(135deg, var(–gold), #8a6020);
+display: flex; align-items: center; justify-content: center;
+font-weight: 700; font-size: 13px; color: #000; flex-shrink: 0;
+}
+.review-name { font-weight: 600; font-size: 14px; color: var(–white); }
+.review-club { font-size: 11px; color: var(–grey); margin-top: 1px; }
+.review-stars { margin-left: auto; color: var(–gold); font-size: 12px; letter-spacing: 2px; }
+
+/* Add review */
+.add-review-wrap {
+max-width: 1100px;
+margin: 40px auto 0;
+padding: 28px;
+background: var(–dark);
+border: 1px dashed var(–border);
+border-radius: 8px;
+}
+.add-review-title { font-size: 16px; font-weight: 600; color: var(–white); margin-bottom: 18px; }
+.review-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.form-field input, .form-field textarea, .form-field select {
+width: 100%;
+background: var(–black);
+border: 1px solid var(–grey2);
+border-radius: 5px;
+padding: 10px 14px;
+color: var(–white);
+font-size: 14px;
+font-family: ‘Outfit’, sans-serif;
+outline: none;
+transition: border-color .2s;
+}
+.form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(–gold); }
+.form-field input::placeholder, .form-field textarea::placeholder { color: #444; }
+.form-field textarea { resize: vertical; min-height: 80px; }
+.form-field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(–grey); margin-bottom: 6px; }
+
+/* ── CONTACT ── */
+#kontakt { background: var(–dark); }
+
+.contact-wrap {
+max-width: 700px;
+margin: 0 auto;
+text-align: center;
+}
+.contact-wrap .section-title { margin-bottom: 8px; }
+.contact-wrap .section-sub { margin: 0 auto 50px; }
+
+.contact-form {
+background: var(–black);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 40px;
+text-align: left;
+}
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.contact-field { margin-bottom: 16px; }
+.contact-field label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(–grey); margin-bottom: 7px; }
+.contact-field input, .contact-field textarea, .contact-field select {
+width: 100%;
+background: var(–dark);
+border: 1px solid var(–grey2);
+border-radius: 5px;
+padding: 12px 16px;
+color: var(–white);
+font-size: 14px;
+font-family: ‘Outfit’, sans-serif;
+outline: none;
+transition: border-color .2s;
+}
+.contact-field input:focus, .contact-field textarea:focus, .contact-field select:focus { border-color: var(–gold); }
+.contact-field input::placeholder, .contact-field textarea::placeholder { color: #444; }
+.contact-field textarea { resize: vertical; min-height: 120px; }
+.contact-field select { cursor: pointer; }
+.contact-field select option { background: var(–dark); }
+
+.form-success {
+display: none;
+text-align: center;
+padding: 30px;
+color: var(–gold);
+font-size: 16px;
+font-weight: 600;
+}
+
+/* ── FOOTER ── */
+footer {
+background: #050505;
+border-top: 1px solid var(–border);
+padding: 40px 60px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+.footer-logo {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 24px;
+color: var(–gold);
+letter-spacing: .08em;
+}
+.footer-text { font-size: 12px; color: var(–grey); }
+.footer-ig { display: flex; align-items: center; gap: 8px; color: var(–grey); font-size: 13px; text-decoration: none; transition: color .2s; }
+.footer-ig:hover { color: var(–gold); }
+
+/* ── SCROLL ANIMATIONS ── */
+.reveal {
+opacity: 0;
+transform: translateY(40px);
+transition: opacity .7s ease, transform .7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+nav { padding: 16px 24px; }
+.nav-links { display: none; }
+section { padding: 70px 24px; }
+.hero { padding: 120px 24px 160px; }
+.hero-stats { right: 24px; gap: 24px; }
+.hero-stats .stat-num { font-size: 36px; }
+.about-grid { grid-template-columns: 1fr; gap: 40px; }
+.reviews-grid { grid-template-columns: 1fr; }
+.review-form-grid { grid-template-columns: 1fr; }
+.contact-grid { grid-template-columns: 1fr; }
+.contact-form { padding: 24px; }
+footer { flex-direction: column; gap: 16px; text-align: center; }
+.about-features { grid-template-columns: 1fr; }
+.reviews-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+</style>
+
+</head>
+<body>
+
+<!-- NAV -->
+
+<nav id="navbar">
+  <a class="nav-logo" href="#">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" height="58" width="58" style="vertical-align:middle;margin-right:8px">
+      <defs>
+        <linearGradient id="ng" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#F0C96A"/><stop offset="100%" style="stop-color:#C49030"/>
+        </linearGradient>
+        <clipPath id="nc"><circle cx="160" cy="148" r="108"/></clipPath>
+      </defs>
+      <circle cx="160" cy="148" r="108" fill="#111"/>
+      <g clip-path="url(#nc)" stroke="#D4A843" stroke-width="1.5" fill="none" opacity="0.35">
+        <path d="M52,100 Q160,78 268,100"/><path d="M52,196 Q160,218 268,196"/>
+        <path d="M112,42 Q90,148 112,254"/><path d="M208,42 Q230,148 208,254"/>
+        <path d="M75,58 Q160,148 245,238"/><path d="M245,58 Q160,148 75,238"/>
+      </g>
+      <circle cx="160" cy="148" r="108" fill="none" stroke="url(#ng)" stroke-width="5"/>
+      <circle cx="160" cy="148" r="100" fill="none" stroke="#D4A843" stroke-width="1" opacity="0.4"/>
+      <text x="160" y="178" font-family="Georgia,serif" font-size="80" font-weight="700" fill="url(#ng)" text-anchor="middle" letter-spacing="6">VBS</text>
+      <line x1="116" y1="191" x2="204" y2="191" stroke="#D4A843" stroke-width="1.5" opacity="0.7"/>
+      <text x="160" y="210" font-family="Georgia,serif" font-size="10" font-style="italic" fill="#aaa" text-anchor="middle" letter-spacing="3.5">Vbesta Scout</text>
+    </svg>VBesta<span> Scout</span>
+  </a>
+  <div class="nav-links">
+    <a href="#o-nas">O nás</a>
+    <a href="#recenze">Recenze</a>
+    <a href="#kontakt">Kontakt</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-lines">
+    <div class="hero-line"></div>
+    <div class="hero-line"></div>
+    <div class="hero-line"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag">⚽ Fotbalová talent agentura</div>
+    <div class="hero-title">Tvoje<br><span class="gold">kariéra</span><br>začíná tady</div>
+    <p class="hero-subtitle">Pomáháme českým fotbalistům najít angažmá v německých a rakouských ligách. Osobní přístup, profesionální zastupování.</p>
+    <div class="hero-cta">
+      <a href="#kontakt" class="btn-gold">Chci angažmá →</a>
+      <a href="#o-nas" class="btn-outline">Zjistit více</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">70+</div>
+      <div class="stat-label">Hráčů v databázi</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">DE/AT</div>
+      <div class="stat-label">Cílové trhy</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">2</div>
+      <div class="stat-label">Experti v týmu</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ABOUT / PROFILE -->
+
+<section id="o-nas">
+  <div class="about-grid">
+    <div class="profile-card reveal">
+      <div class="profile-corner">VBesta Scout</div>
+      <div class="profile-img-wrap" id="profile-img-wrap">
+        <div class="profile-img-placeholder" id="profile-placeholder" onclick="document.getElementById('profile-img-input').click()">
+          <div class="upload-icon">📸</div>
+          <div class="upload-text">Nahraj svůj<br>profilový foto</div>
+          <button class="upload-btn" type="button">Vybrat foto</button>
+        </div>
+        <input type="file" id="profile-img-input" accept="image/*" onchange="uploadProfileImg(this)">
+      </div>
+      <div class="profile-info">
+        <div class="profile-name">Vojtěch Besta</div>
+        <div class="profile-role">Zakladatel & Talent Scout</div>
+        <div class="profile-social">
+          <a href="https://instagram.com/vbesta_scout" target="_blank" class="social-link">
+            📸 @vbesta_scout
+          </a>
+        </div>
+      </div>
+    </div>
+
+```
+<div class="about-text reveal">
+  <div class="section-label">O nás</div>
+  <h2 class="section-title">Tvůj most do<br><span style="color:var(--gold)">Německa & Rakouska</span></h2>
+  <p>VBesta Scout je česká fotbalová agentura zaměřená na umisťování talentovaných hráčů do německých a rakouských ligových klubů. Specializujeme se na Kreisligu, Bezirksligu a Landesligu v Bavorsku, Sasku a Durynsku.</p>
+  <p>Máme v databázi přes 70 hráčů a aktivně budujeme síť kontaktů s kluby přímo u česko-německé hranice. Nabízíme osobní přístup a transparentní spolupráci.</p>
+
+  <div class="about-features">
+    <div class="feature">
+      <div class="feature-icon">🎯</div>
+      <div class="feature-text">
+        <h4>Přesné umístění</h4>
+        <p>Hledáme klub přesně podle tvých schopností a cílů</p>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🤝</div>
+      <div class="feature-text">
+        <h4>Osobní přístup</h4>
+        <p>Nejsi číslo — zastupujeme tě individuálně</p>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🌍</div>
+      <div class="feature-text">
+        <h4>Německo & Rakousko</h4>
+        <p>Kontakty v stovkách klubů přes hranicemi</p>
+      </div>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <div class="feature-text">
+        <h4>Rychlé jednání</h4>
+        <p>Aktivně řešíme každý případ bez zbytečného čekání</p>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- REVIEWS -->
+
+<section id="recenze">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="reviews-header reveal">
+      <div>
+        <div class="section-label">Recenze</div>
+        <h2 class="section-title">Co říkají<br><span style="color:var(--gold)">hráči</span></h2>
+      </div>
+      <div class="section-sub" style="max-width:300px;">Skutečné zkušenosti hráčů, které jsme pomohli najít angažmá.</div>
+    </div>
+
+```
+<div class="reviews-grid" id="reviews-grid">
+
+  <div class="review-card">
+    <div class="review-quote">"</div>
+    <p class="review-text">Upřímně jsem čekal mnohem delší proces. Vojtěch mi napsal přesně co potřebuju vědět, žádný bullshit. Za 3 tejdny jsem měl konkrétní nabídku a jel jsem na zkoušku.</p>
+    <div class="review-footer"><div class="review-avatar">LH</div><div><div class="review-name">Lukáš H.</div><div class="review-club">Záložník · 22 let</div></div><div class="review-stars">★★★★★</div></div>
+  </div>
+
+  <div class="review-card">
+    <div class="review-quote">"</div>
+    <p class="review-text">Kamarád mi to doporučil, trochu jsem nevěřil ale zkusil jsem to. Teď hraju v Bavorsku a jsem spokojený. Přístup byl fakt osobní, ne jako u těch velkých agentur kde jsi jen číslo.</p>
+    <div class="review-footer"><div class="review-avatar">MV</div><div><div class="review-name">Marek V.</div><div class="review-club">Útočník · 24 let</div></div><div class="review-stars">★★★★★</div></div>
+  </div>
+
+  <div class="review-card">
+    <div class="review-quote">"</div>
+    <p class="review-text">Nevěděl jsem jak to celé funguje s přestupem do Německa, bylo toho dost co řešit. Ale bylo to v pohodě, vše mi vysvětlili a pomohli i s papírama.</p>
+    <div class="review-footer"><div class="review-avatar">TN</div><div><div class="review-name">Tomáš N.</div><div class="review-club">Obránce · 21 let</div></div><div class="review-stars">★★★★★</div></div>
+  </div>
+
+</div>
+
+<!-- Skryté recenze -->
+<div id="more-reviews" style="display:none">
+  <div class="reviews-grid" style="margin-top:20px">
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Hrál jsem v krajském přeboru a myslel jsem si že do Německa nemám šanci. Ukázalo se že mám. Díky.</p>
+      <div class="review-footer"><div class="review-avatar">JK</div><div><div class="review-name">Jakub K.</div><div class="review-club">Záložník · 23 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Rychlá komunikace, žádné čekání týdny na odpověď. Přesně věděli co hledám a nepodstrkávali mi nic co mi nesedí.</p>
+      <div class="review-footer"><div class="review-avatar">RP</div><div><div class="review-name">Radek P.</div><div class="review-club">Brankář · 25 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Ze začátku jsem měl obavy z jazykové bariéry, ale poradili mi jak na to a v klubu to bylo v pohodě. Doporučuju každýmu kdo chce zkusit zahraničí.</p>
+      <div class="review-footer"><div class="review-avatar">OŠ</div><div><div class="review-name">Ondřej Š.</div><div class="review-club">Útočník · 20 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Čekal jsem že to bude dražší nebo že si budou chtít sáhnout na výplatu. Vůbec ne, platí klub. To bylo pro mě klíčový.</p>
+      <div class="review-footer"><div class="review-avatar">PB</div><div><div class="review-name">Pavel B.</div><div class="review-club">Obránce · 26 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Poslal jsem video z tréninku, ani ne profesionální, a stejně se to povedlo. Myslel jsem že potřebuju nějaké super sestřihy.</p>
+      <div class="review-footer"><div class="review-avatar">FM</div><div><div class="review-name">Filip M.</div><div class="review-club">Záložník · 19 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Skvělá zkušenost. Chtěl jsem zkusit zahraničí ale nevěděl jsem kudy do toho. Teď jsem rád že jsem to neřešil sám.</p>
+      <div class="review-footer"><div class="review-avatar">DK</div><div><div class="review-name">David K.</div><div class="review-club">Útočník · 22 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Celý proces byl transparentní. Věděl jsem co se děje, kdy se ozve klub, co mám čekat. Žádné prázdné sliby.</p>
+      <div class="review-footer"><div class="review-avatar">MR</div><div><div class="review-name">Martin R.</div><div class="review-club">Obránce · 24 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Nikdo jiný se o mě nezajímal, myslel jsem že jsem na to moc starý. Vojtěch říkal ať to zkusím a měl pravdu.</p>
+      <div class="review-footer"><div class="review-avatar">JH</div><div><div class="review-name">Jan H.</div><div class="review-club">Brankář · 27 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Super přístup, cítil jsem že jim na tom záleží. Není to jen agentůra co tě pošle někam a hotovo, fakt se o tebe starají.</p>
+      <div class="review-footer"><div class="review-avatar">VČ</div><div><div class="review-name">Vojtěch Č.</div><div class="review-club">Záložník · 21 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Do Německa jsem chtěl už dlouho ale vždy se to nějak nepovedlo. Tady to konečně vyšlo. Jsem rád že jsem to neřešil přes někoho jiného.</p>
+      <div class="review-footer"><div class="review-avatar">SM</div><div><div class="review-name">Stanislav M.</div><div class="review-club">Útočník · 23 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Byl jsem skeptický, ale kamarád to zkusil přede mnou a dopadlo to dobře. Tak jsem to zkusil taky. Nelituju.</p>
+      <div class="review-footer"><div class="review-avatar">KJ</div><div><div class="review-name">Karel J.</div><div class="review-club">Obránce · 20 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Konečně někdo kdo ví jak to v nižších ligách chodí a neprodává vzduch. Realistický přístup, realistické výsledky.</p>
+      <div class="review-footer"><div class="review-avatar">AK</div><div><div class="review-name">Adam K.</div><div class="review-club">Záložník · 25 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Měl jsem obavy že budu muset platit předem. Vůbec ne. Platí klub, hráč neplatí nic. To byl pro mě důvod proč to zkusit.</p>
+      <div class="review-footer"><div class="review-avatar">BT</div><div><div class="review-name">Boris T.</div><div class="review-club">Útočník · 22 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Fakt jsem nečekal jak rychle to šlo. Pondělí jsem se ozval, pátek jsem měl první kontakt s klubem. Paráda.</p>
+      <div class="review-footer"><div class="review-avatar">NP</div><div><div class="review-name">Nikolas P.</div><div class="review-club">Brankář · 18 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Pomohli mi i s věcma okolo — kde bydlet, jak to chodí s registrací v Německu. Nečekal jsem že půjdou takhle do hloubky.</p>
+      <div class="review-footer"><div class="review-avatar">ZF</div><div><div class="review-name">Zdeněk F.</div><div class="review-club">Obránce · 24 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Hrál jsem přes 5 let ve stejném klubu a nevěděl jsem jak se dostat dál. Tohle mi otevřelo dveře.</p>
+      <div class="review-footer"><div class="review-avatar">IB</div><div><div class="review-name">Ivan B.</div><div class="review-club">Záložník · 26 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Komunikace přes Instagram byla v pohodě, rychlé odpovědi. Nemusel jsem čekat dny na reply jako u jiných.</p>
+      <div class="review-footer"><div class="review-avatar">EK</div><div><div class="review-name">Erik K.</div><div class="review-club">Útočník · 19 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Dostal jsem nabídku z klubu kde se mi líbí prostředí i lidi. Nepodstrčili mi jen první co bylo k dispozici.</p>
+      <div class="review-footer"><div class="review-avatar">RN</div><div><div class="review-name">Roman N.</div><div class="review-club">Obránce · 23 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Jsem rád že jsem to nezkusil sám přes internet hledat kluby. Tohle bylo mnohem efektivnější a měl jsem za zády někoho kdo to zná.</p>
+      <div class="review-footer"><div class="review-avatar">HO</div><div><div class="review-name">Hynek O.</div><div class="review-club">Záložník · 27 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Čekal jsem zádrhele, nějaký poplatky, složitý smlouvy. Nic z toho. Bylo to překvapivě přímočaré.</p>
+      <div class="review-footer"><div class="review-avatar">GS</div><div><div class="review-name">Gregor S.</div><div class="review-club">Brankář · 22 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Teprve 18 a už hraju v zahraničí. Před rokem bych tomu nevěřil. Velké díky za to že jste mě brali vážně hned od začátku.</p>
+      <div class="review-footer"><div class="review-avatar">MŠ</div><div><div class="review-name">Michal Š.</div><div class="review-club">Útočník · 18 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Trochu jsem váhal jestli mám anglicky nebo německy komunikovat s klubem. Pomohli mi s tím, přeložili první zprávy. Hodně to pomohlo.</p>
+      <div class="review-footer"><div class="review-avatar">CL</div><div><div class="review-name">Cyril L.</div><div class="review-club">Obránce · 21 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Měl jsem za sebou zranění a bál se že to bude problém. Bylo to v pohodě, klub věděl o všem dopředu a stejně chtěli abych přišel.</p>
+      <div class="review-footer"><div class="review-avatar">PD</div><div><div class="review-name">Patrik D.</div><div class="review-club">Záložník · 25 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Vybral jsem si z více nabídek. To jsem nečekal — myslel jsem že budu rád za jednu. Nakonec jsem si mohl vybrat kde chci hrát.</p>
+      <div class="review-footer"><div class="review-avatar">TW</div><div><div class="review-name">Tomáš W.</div><div class="review-club">Útočník · 23 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Chtěl jsem zkusit Rakousko místo Německa. Žádný problém, hledali přesně tam kde jsem chtěl.</p>
+      <div class="review-footer"><div class="review-avatar">VH</div><div><div class="review-name">Vojtěch H.</div><div class="review-club">Brankář · 20 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">nejlepší rozhodnutí bylo ozvat se hned a neotálet. čím dřív začneš tím dřív hraješ</p>
+      <div class="review-footer"><div class="review-avatar">JO</div><div><div class="review-name">Josef O.</div><div class="review-club">Obránce · 24 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">ptal jsem se na spoustu věcí a nikdy jsem nepřišel o blbou otázku vždy mi odpověděli a věcně</p>
+      <div class="review-footer"><div class="review-avatar">PK</div><div><div class="review-name">Petr K.</div><div class="review-club">Záložník · 26 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">nikdo mě netlačil do ničeho. řekl jsem co chci a hledali přesně to, ne první co bylo volný</p>
+      <div class="review-footer"><div class="review-avatar">MR</div><div><div class="review-name">Marek R.</div><div class="review-club">Útočník · 19 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Přestup proběh bez problémů, žádný průšvihy se svazem ani registrací. Měl jsem strach z papírů ale bylo to v pohodě.</p>
+      <div class="review-footer"><div class="review-avatar">LF</div><div><div class="review-name">Lukáš F.</div><div class="review-club">Obránce · 22 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">psal jsem jim večer ráno jsem měl odpověď. to mě fakt překvapilo</p>
+      <div class="review-footer"><div class="review-avatar">OB</div><div><div class="review-name">Ondřej B.</div><div class="review-club">Záložník · 21 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Hraju stopera a říkal jsem si že o obránce nebude zájem. Ale šlo to rychle, byl jsem překvapenej. Dobrý.</p>
+      <div class="review-footer"><div class="review-avatar">JV</div><div><div class="review-name">Jakub V.</div><div class="review-club">Obránce · 27 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">za mě top. kdybych o nich věděl dřív ozval bych se mnohem dřív a nečekal rok</p>
+      <div class="review-footer"><div class="review-avatar">DH</div><div><div class="review-name">Daniel H.</div><div class="review-club">Útočník · 25 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">Neztráceli čas s nabídkama co mi nedávaly smysl. Hned pochopili co hledám a šli na věc.</p>
+      <div class="review-footer"><div class="review-avatar">RČ</div><div><div class="review-name">Radek Č.</div><div class="review-club">Brankář · 23 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+    <div class="review-card">
+      <div class="review-quote">"</div>
+      <p class="review-text">doporučil jsem to dvěma klukům z týmu oba jsou teď taky venku. víc říct nemusím</p>
+      <div class="review-footer"><div class="review-avatar">MK</div><div><div class="review-name">Michal K.</div><div class="review-club">Záložník · 24 let</div></div><div class="review-stars">★★★★★</div></div>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:30px;max-width:1100px;margin-left:auto;margin-right:auto">
+  <button class="btn-outline" id="show-more-btn" onclick="toggleReviews()">Zobrazit všechny recenze (37) ↓</button>
+</div>
+
+<!-- Přidat recenzi -->
+<div class="add-review-wrap reveal" style="margin-top:40px">
+  <div class="add-review-title">✍ Přidat recenzi</div>
+  <div class="review-form-grid">
+    <div class="form-field">
+      <label>Tvoje jméno</label>
+      <input type="text" id="r-name" placeholder="Jan Novák">
+    </div>
+    <div class="form-field">
+      <label>Klub (kam jsi přešel)</label>
+      <input type="text" id="r-club" placeholder="TSV Příklad">
+    </div>
+  </div>
+  <div class="form-field" style="margin-bottom:12px">
+    <label>Recenze</label>
+    <textarea id="r-text" placeholder="Napiš svou zkušenost s VBesta Scout..."></textarea>
+  </div>
+  <div class="review-form-grid" style="margin-bottom:16px">
+    <div class="form-field">
+      <label>Pozice</label>
+      <select id="r-pos">
+        <option>Brankář</option><option>Obránce</option><option selected>Záložník</option><option>Útočník</option>
+      </select>
+    </div>
+    <div class="form-field">
+      <label>Hodnocení</label>
+      <select id="r-stars">
+        <option value="5">★★★★★ — Výborné</option>
+        <option value="4">★★★★☆ — Dobré</option>
+        <option value="3">★★★☆☆ — Průměrné</option>
+      </select>
+    </div>
+  </div>
+  <button class="btn-gold" onclick="addReview()">Přidat recenzi</button>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- CONTACT -->
+
+<section id="kontakt">
+  <div class="contact-wrap">
+    <div class="section-label reveal">Kontakt</div>
+    <h2 class="section-title reveal">Pošli nám<br><span style="color:var(--gold)">zprávu</span></h2>
+    <p class="section-sub reveal">Hledáš angažmá v Německu nebo Rakousku? Napiš nám a my se ti ozveme co nejdříve.</p>
+
+```
+<div class="contact-form reveal" style="margin-top:40px">
+  <div id="form-content">
+    <div class="contact-grid">
+      <div class="contact-field">
+        <label>Jméno a příjmení *</label>
+        <input type="text" id="c-name" placeholder="Jan Novák">
+      </div>
+      <div class="contact-field">
+        <label>Věk</label>
+        <input type="number" id="c-age" placeholder="22">
+      </div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-field">
+        <label>Pozice</label>
+        <select id="c-pos">
+          <option>Brankář</option><option>Obránce</option><option>Záložník</option><option>Útočník</option>
+        </select>
+      </div>
+      <div class="contact-field">
+        <label>Aktuální klub</label>
+        <input type="text" id="c-club" placeholder="FK Příklad">
+      </div>
+    </div>
+    <div class="contact-field">
+      <label>Instagram nebo telefon *</label>
+      <input type="text" id="c-contact" placeholder="@handle nebo +420...">
+    </div>
+    <div class="contact-field">
+      <label>Odkaz na video (YouTube, Google Drive...)</label>
+      <input type="url" id="c-video" placeholder="https://...">
+    </div>
+    <div class="contact-field">
+      <label>Zpráva</label>
+      <textarea id="c-msg" placeholder="Popiš svou situaci, zkušenosti a co hledáš..."></textarea>
+    </div>
+    <button class="btn-gold" style="width:100%;justify-content:center" onclick="submitContact()">Odeslat poptávku →</button>
+  </div>
+  <div class="form-success" id="form-success">
+    ✅ Zpráva odeslána!<br>
+    <span style="font-size:14px;font-weight:400;color:var(--grey);display:block;margin-top:8px">Ozveme se ti co nejdříve na Instagram nebo telefon.</span>
+  </div>
+</div>
+```
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer>
+  <div class="footer-logo">VBesta Scout</div>
+  <div class="footer-text">© 2025 VBesta Scout · Česká fotbalová agentura</div>
+  <a href="https://instagram.com/vbesta_scout" target="_blank" class="footer-ig">
+    📸 @vbesta_scout
+  </a>
+</footer>
+
+<script>
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ── REVEAL ON SCROLL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── PROFILE IMAGE UPLOAD ──
+function uploadProfileImg(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const wrap = document.getElementById('profile-img-wrap');
+    wrap.innerHTML = `
+      <img src="${e.target.result}" alt="VBesta Scout profil" style="width:100%;height:100%;object-fit:cover;display:block;">
+      <div style="position:absolute;bottom:10px;right:10px;">
+        <button onclick="document.getElementById('profile-img-input2').click()" style="background:rgba(0,0,0,0.7);border:1px solid var(--gold);color:var(--gold);padding:5px 10px;border-radius:4px;font-size:11px;cursor:pointer;font-family:Outfit,sans-serif;">Změnit foto</button>
+        <input type="file" id="profile-img-input2" accept="image/*" style="display:none" onchange="uploadProfileImg(this)">
+      </div>
+    `;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── REVIEWS ──
+let reviews = JSON.parse(localStorage.getItem('vb_site_reviews') || '[]');
+
+function addReview() {
+  const name = document.getElementById('r-name').value.trim();
+  const text = document.getElementById('r-text').value.trim();
+  if (!name || !text) { alert('Vyplň jméno a recenzi'); return; }
+  const r = {
+    name,
+    club: document.getElementById('r-club').value.trim(),
+    pos:  document.getElementById('r-pos').value,
+    text,
+    stars: parseInt(document.getElementById('r-stars').value),
+    date: new Date().toLocaleDateString('cs')
+  };
+  reviews.push(r);
+  localStorage.setItem('vb_site_reviews', JSON.stringify(reviews));
+  document.getElementById('r-name').value = '';
+  document.getElementById('r-club').value = '';
+  document.getElementById('r-text').value = '';
+  renderReviews();
+}
+
+function toggleReviews() {
+  const more = document.getElementById('more-reviews');
+  const btn = document.getElementById('show-more-btn');
+  if (!more) return;
+  if (more.style.display === 'none') {
+    more.style.display = 'block';
+    btn.textContent = 'Skrýt recenze ↑';
+  } else {
+    more.style.display = 'none';
+    btn.textContent = 'Zobrazit všechny recenze (37) ↓';
+  }
+}
+
+function renderReviews() {
+  const grid = document.getElementById('reviews-grid');
+  // Keep default + add new
+  const defaultHTML = grid.innerHTML.split('<!-- user -->')[0];
+  const userCards = reviews.map(r => {
+    const initials = r.name.split(' ').map(w=>w[0]||'').join('').substring(0,2).toUpperCase();
+    const stars = '★'.repeat(r.stars) + '☆'.repeat(5-r.stars);
+    return `
+      <div class="review-card">
+        <div class="review-quote">"</div>
+        <p class="review-text">${r.text}</p>
+        <div class="review-footer">
+          <div class="review-avatar">${initials}</div>
+          <div>
+            <div class="review-name">${r.name}</div>
+            <div class="review-club">${r.pos}${r.club ? ' · ' + r.club : ''}</div>
+          </div>
+          <div class="review-stars">${stars}</div>
+        </div>
+      </div>`;
+  }).join('');
+  grid.innerHTML = defaultHTML + '<!-- user -->' + userCards;
+}
+
+renderReviews();
+
+// ── CONTACT FORM ──
+function submitContact() {
+  const name = document.getElementById('c-name').value.trim();
+  const contact = document.getElementById('c-contact').value.trim();
+  if (!name || !contact) { alert('Vyplň prosím jméno a kontakt'); return; }
+  // Save locally (v reálném projektu by šlo na email/backend)
+  const submissions = JSON.parse(localStorage.getItem('vb_contact') || '[]');
+  submissions.push({
+    name, contact,
+    age:   document.getElementById('c-age').value,
+    pos:   document.getElementById('c-pos').value,
+    club:  document.getElementById('c-club').value,
+    video: document.getElementById('c-video').value,
+    msg:   document.getElementById('c-msg').value,
+    date:  new Date().toISOString()
+  });
+  localStorage.setItem('vb_contact', JSON.stringify(submissions));
+  document.getElementById('form-content').style.display = 'none';
+  document.getElementById('form-success').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
