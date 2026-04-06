@@ -4,684 +4,778 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VBesta Scout</title>
+<title>VBesta Scout — CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-body{margin:0;padding:0;background:#111;color:#eee;font-family:Arial,sans-serif;font-size:15px;}
-h1{color:#c9a84c;margin:0;}
-.top{background:#1a1916;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #c9a84c;}
-.tabs{display:flex;background:#1a1916;border-bottom:1px solid #333;}
-.tab{flex:1;padding:14px;text-align:center;cursor:pointer;color:#888;font-size:13px;font-weight:bold;border:none;background:none;}
-.tab:hover{color:#c9a84c;}
-.tab.on{color:#c9a84c;border-bottom:2px solid #c9a84c;}
-.page{display:none;padding:20px;}
+:root{
+--black:#080808;--dark:#111;--dark2:#181818;
+--gold:#D4A843;--gold2:#F0C96A;--golddim:rgba(212,168,67,0.1);--goldbor:rgba(212,168,67,0.2);
+--white:#F5F2EC;--grey:#888;--grey2:#2a2a2a;--grey3:#333;
+--green:#4caf7d;--red:#e06060;--blue:#6a9fd8;--yel:#e8c84a;--pur:#a07ac8;--ora:#e8944a;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--black);color:var(--white);font-family:'Outfit',sans-serif;font-size:14px;line-height:1.5;}
+
+/* NAV */
+nav{background:rgba(8,8,8,.98);border-bottom:1px solid var(–goldbor);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo{font-family:‘Bebas Neue’,sans-serif;font-size:20px;letter-spacing:.08em;color:var(–gold);}
+.logo span{color:var(–white);}
+.sync{display:flex;align-items:center;gap:6px;font-size:12px;color:var(–grey);cursor:pointer;}
+.sd{width:7px;height:7px;border-radius:50%;background:var(–grey);flex-shrink:0;}
+.sd.ok{background:var(–green);box-shadow:0 0 5px var(–green);}
+.sd.err{background:var(–red);}
+.sd.sp{background:var(–yel);animation:bl .7s infinite;}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* TABS */
+.tabs{background:var(–dark);border-bottom:1px solid var(–goldbor);display:flex;overflow-x:auto;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;padding:12px 16px;cursor:pointer;font-size:12px;font-weight:600;color:var(–grey);border-bottom:2px solid transparent;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;transition:color .15s;}
+.tab:hover{color:var(–gold);}
+.tab.on{color:var(–gold);border-bottom-color:var(–gold);}
+
+/* PAGES */
+.page{display:none;padding:16px;max-width:900px;margin:0 auto;}
 .page.on{display:block;}
-.card{background:#1a1916;border:1px solid #333;border-radius:8px;padding:14px;margin-bottom:10px;cursor:pointer;}
-.card:hover{border-color:#c9a84c;}
-.card h3{margin:0 0 6px;color:#fff;}
-.card p{margin:3px 0;color:#888;font-size:13px;}
-.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:bold;margin-right:5px;}
-.b-new{background:#1a3a5c;color:#6a9fd8;}
-.b-talks{background:#3a3000;color:#e8c84a;}
-.b-signed{background:#0a3020;color:#4caf7d;}
-.b-placed{background:#3a2800;color:#c9a84c;}
-.b-casting{background:#2a1a3a;color:#a07ac8;}
-.b-inactive{background:#222;color:#666;}
-input,select,textarea{width:100%;padding:10px;margin:5px 0 12px;background:#222;border:1px solid #444;color:#eee;border-radius:6px;font-size:14px;box-sizing:border-box;}
-input:focus,select:focus,textarea:focus{border-color:#c9a84c;outline:none;}
-label{display:block;color:#999;font-size:12px;text-transform:uppercase;letter-spacing:1px;margin-top:8px;}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.btn{padding:12px 20px;border:none;border-radius:7px;font-size:14px;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;}
-.btn-gold{background:#c9a84c;color:#000;}
-.btn-gold:hover{background:#e8c97a;}
-.btn-grey{background:#333;color:#aaa;border:1px solid #444;}
-.btn-red{background:#3a0000;color:#e06060;border:1px solid #5a0000;}
-.form-box{background:#1a1916;border:1px solid #333;border-radius:10px;padding:20px;margin-bottom:16px;}
-.form-box h2{color:#c9a84c;margin:0 0 16px;font-size:18px;}
+@media(min-width:600px){.page{padding:20px 24px;}}
+
+/* SECTION */
+.sec-title{font-family:‘Bebas Neue’,sans-serif;font-size:22px;letter-spacing:.04em;color:var(–white);margin-bottom:3px;}
+.sec-sub{font-size:12px;color:var(–grey);margin-bottom:16px;}
+
+/* STAT TILES */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.stat{background:#1a1916;border-left:3px solid #c9a84c;border-radius:8px;padding:14px;}
-.stat.g{border-color:#4caf7d;}
-.stat.b{border-color:#6a9fd8;}
-.stat.p{border-color:#a07ac8;}
-.stat-n{font-size:30px;font-weight:bold;color:#fff;}
-.stat-l{font-size:11px;color:#888;text-transform:uppercase;}
-.sync{font-size:12px;color:#666;}
-.sync.ok{color:#4caf7d;}
-.sync.err{color:#e06060;}
-.detail-box{background:#1a1916;border:1px solid #333;border-radius:10px;padding:16px;margin-bottom:12px;}
-.detail-box h2{color:#fff;margin:0 0 12px;}
-.info-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:14px;}
-.info-row:last-child{border:none;}
-.info-key{color:#666;}
-.info-val{color:#eee;text-align:right;}
-.info-val a{color:#c9a84c;}
-.video-item{background:#222;border:1px solid #333;border-radius:6px;padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
-.video-item a{color:#c9a84c;text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.vdel{background:none;border:none;color:#666;cursor:pointer;font-size:16px;}
-.vembed{width:100%;aspect-ratio:16/9;border:none;border-radius:8px;margin-bottom:8px;}
-textarea.notes{height:100px;}
-.back{color:#c9a84c;cursor:pointer;margin-bottom:16px;display:inline-block;font-size:14px;}
-.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.fb{padding:5px 12px;border-radius:20px;border:1px solid #333;background:transparent;color:#888;cursor:pointer;font-size:12px;}
-.fb.on{border-color:#c9a84c;color:#c9a84c;background:rgba(201,168,76,.1);}
-.empty{text-align:center;padding:40px;color:#555;}
-.activity-item{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid #222;}
-.activity-item:last-child{border:none;}
-.adot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0;}
+@media(min-width:500px){.stat-grid{grid-template-columns:repeat(4,1fr);}}
+.stile{background:var(–dark);border:1px solid var(–goldbor);border-radius:10px;padding:14px;position:relative;overflow:hidden;cursor:pointer;transition:border-color .15s;}
+.stile:hover{border-color:rgba(212,168,67,.5);}
+.stile::after{content:’’;position:absolute;top:0;left:0;right:0;height:2px;background:var(–c,var(–gold));}
+.stile-n{font-family:‘Bebas Neue’,sans-serif;font-size:34px;color:var(–white);line-height:1;}
+.stile-l{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(–grey);margin-top:3px;}
+
+/* PHASE GRID */
+.phase-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+@media(min-width:500px){.phase-grid{grid-template-columns:repeat(4,1fr);}}
+.ptile{background:var(–dark2);border:1px solid var(–grey3);border-radius:8px;padding:12px;cursor:pointer;transition:border-color .15s;border-left:3px solid var(–c,var(–grey3));}
+.ptile:hover{border-color:var(–gold);}
+.ptile-n{font-family:‘Bebas Neue’,sans-serif;font-size:26px;color:var(–c,var(–grey));line-height:1;}
+.ptile-l{font-size:11px;color:var(–grey);margin-top:2px;}
+
+/* ACCORDION — main sections */
+.acc{background:var(–dark);border:1px solid var(–goldbor);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.acc-hdr{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background .15s;}
+.acc-hdr:hover{background:rgba(212,168,67,.04);}
+.acc-title{font-size:14px;font-weight:600;color:var(–gold);display:flex;align-items:center;gap:8px;}
+.acc-arrow{color:var(–gold);font-size:16px;transition:transform .2s;flex-shrink:0;}
+.acc.open .acc-arrow{transform:rotate(90deg);}
+.acc-body{display:none;padding:16px;border-top:1px solid var(–grey2);}
+.acc.open .acc-body{display:block;}
+
+/* SUB ACCORDION — inside detail */
+.sacc{background:var(–dark2);border:1px solid var(–grey3);border-radius:8px;margin-bottom:8px;overflow:hidden;}
+.sacc-hdr{padding:11px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.sacc-hdr:hover{background:rgba(255,255,255,.03);}
+.sacc-title{font-size:13px;font-weight:600;color:var(–white);display:flex;align-items:center;gap:7px;}
+.sacc-arrow{color:var(–grey);font-size:14px;transition:transform .2s;flex-shrink:0;}
+.sacc.open .sacc-arrow{transform:rotate(90deg);}
+.sacc-body{display:none;padding:12px 14px;border-top:1px solid var(–grey2);}
+.sacc.open .sacc-body{display:block;}
+
+/* FORM FIELDS */
+.fg{margin-bottom:12px;}
+label,.fl{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(–grey);margin-bottom:4px;font-weight:700;}
+.fi,.fs,.ft{width:100%;background:var(–dark2);border:1px solid var(–grey3);border-radius:7px;padding:10px 12px;color:var(–white);font-size:14px;font-family:‘Outfit’,sans-serif;outline:none;transition:border-color .15s;}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(–gold);}
+.ft{resize:vertical;min-height:70px;}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.f3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+@media(max-width:400px){.f2{grid-template-columns:1fr;}.f3{grid-template-columns:1fr 1fr;}}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:10px 16px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:‘Outfit’,sans-serif;transition:all .15s;white-space:nowrap;}
+.btn-gold{background:var(–gold);color:#000;}
+.btn-gold:hover{background:var(–gold2);}
+.btn-full{width:100%;margin-top:8px;}
+.btn-dark{background:var(–dark2);color:var(–grey);border:1px solid var(–grey3);}
+.btn-dark:hover{color:var(–white);}
+.btn-red{background:rgba(224,96,96,.12);color:var(–red);border:1px solid rgba(224,96,96,.3);}
+.btn-sm{padding:6px 11px;font-size:12px;}
+
+/* PLAYER CARDS */
+.pcard{background:var(–dark);border:1px solid var(–goldbor);border-radius:10px;padding:14px 14px 12px 18px;margin-bottom:8px;cursor:pointer;position:relative;overflow:hidden;transition:border-color .15s,transform .1s;}
+.pcard:hover{border-color:rgba(212,168,67,.6);transform:translateY(-1px);}
+.pcard-bar{position:absolute;left:0;top:0;bottom:0;width:3px;}
+.pcard-name{font-size:15px;font-weight:700;color:var(–white);margin-bottom:5px;}
+.pcard-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:3px;}
+.pcard-meta{font-size:12px;color:var(–grey);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+.badge::before{content:’’;width:5px;height:5px;border-radius:50%;background:currentColor;}
+.b1{background:rgba(106,159,216,.15);color:var(–blue);}
+.b2{background:rgba(232,200,74,.15);color:var(–yel);}
+.b3{background:rgba(232,148,74,.15);color:var(–ora);}
+.b4{background:rgba(160,122,200,.15);color:var(–pur);}
+.b5{background:rgba(212,168,67,.15);color:var(–gold);}
+.b6{background:rgba(76,175,125,.2);color:var(–green);}
+.b7{background:rgba(90,88,80,.2);color:#666;}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;background:var(–dark2);color:var(–grey);border:1px solid var(–grey3);}
+.prog-s{background:rgba(106,159,216,.15);color:var(–blue);display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+.prog-p{background:rgba(212,168,67,.15);color:var(–gold);display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+
+/* FILTERS */
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.fb{padding:5px 12px;border-radius:20px;border:1px solid var(–grey3);background:transparent;color:var(–grey);cursor:pointer;font-size:11px;font-family:‘Outfit’,sans-serif;font-weight:500;transition:all .15s;}
+.fb.on,.fb:hover{border-color:var(–gold);color:var(–gold);background:var(–golddim);}
+
+/* DETAIL HERO */
+.det-hero{background:var(–dark);border:1px solid var(–goldbor);border-radius:10px;padding:16px;margin-bottom:12px;}
+.det-name{font-family:‘Bebas Neue’,sans-serif;font-size:26px;letter-spacing:.04em;color:var(–white);margin-bottom:7px;line-height:1.1;}
+.det-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;}
+.stsel{width:100%;max-width:100%;background:var(–dark2);border:1px solid var(–grey3);border-radius:7px;padding:8px 12px;color:var(–white);font-size:13px;font-family:‘Outfit’,sans-serif;outline:none;margin-top:6px;}
+.stsel:focus{border-color:var(–gold);}
+.det-btns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+
+/* INFO ROWS */
+.irow{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(–grey2);font-size:13px;gap:8px;}
+.irow:last-child{border:none;}
+.ik{color:var(–grey);flex-shrink:0;min-width:90px;}
+.iv{color:var(–white);text-align:right;word-break:break-word;}
+.iv a{color:var(–gold);text-decoration:none;}
+.igrid{display:grid;grid-template-columns:1fr;gap:0;}
+@media(min-width:500px){.igrid{grid-template-columns:1fr 1fr;gap:0 20px;}}
+
+/* CHECKLIST */
+.chk{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(–dark2);border:1px solid var(–grey3);border-radius:7px;margin-bottom:7px;}
+.chk-l{display:flex;align-items:center;gap:9px;font-size:13px;}
+.chk-r{display:flex;align-items:center;gap:8px;}
+.chk-ok{font-size:11px;color:var(–green);}
+.chk-no{font-size:11px;color:var(–grey);}
+
+/* MATCH */
+.stbl{width:100%;border-collapse:collapse;font-size:12px;}
+.stbl th{padding:7px 10px;text-align:left;background:var(–dark2);color:var(–grey);font-size:10px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;border-bottom:1px solid var(–grey3);}
+.stbl td{padding:7px 10px;border-bottom:1px solid var(–grey2);color:var(–white);}
+.stbl-wrap{overflow-x:auto;}
+
+/* FAKTURA */
+.fak{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(–dark2);border:1px solid var(–grey3);border-radius:7px;margin-bottom:7px;gap:8px;}
+.fak-i{flex:1;min-width:0;}
+.fak-name{font-size:13px;font-weight:600;color:var(–white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fak-meta{font-size:11px;color:var(–grey);}
+.fak-r{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.fak-s{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;}
+.fak-sent{background:rgba(232,200,74,.15);color:var(–yel);}
+.fak-paid{background:rgba(76,175,125,.15);color:var(–green);}
+
+/* VIDEO */
+.vitem{display:flex;align-items:center;gap:7px;padding:8px 10px;background:var(–dark2);border:1px solid var(–grey3);border-radius:7px;margin-bottom:6px;}
+.vitem a{color:var(–gold);font-size:12px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none;}
+.vdel{background:none;border:none;color:var(–grey);cursor:pointer;font-size:14px;padding:2px 5px;}
+.vdel:hover{color:var(–red);}
+.vembed{width:100%;aspect-ratio:16/9;border:none;border-radius:8px;margin-bottom:7px;}
+.addrow{display:flex;gap:8px;margin-top:8px;}
+.addrow .fi{margin:0;flex:1;}
+.nota{width:100%;background:var(–dark2);border:1px solid var(–grey3);border-radius:7px;padding:10px 12px;color:var(–white);font-size:13px;font-family:‘Outfit’,sans-serif;outline:none;resize:vertical;min-height:80px;line-height:1.6;}
+.nota:focus{border-color:var(–gold);}
+
+/* PHOTO GRID */
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.photo-wrap{position:relative;}
+.photo-wrap img{width:100%;border-radius:7px;border:1px solid var(–grey3);display:block;}
+.photo-del{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.75);border:none;color:#fff;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;}
+
+/* ACTIVITY */
+.widget{background:var(–dark);border:1px solid var(–goldbor);border-radius:10px;padding:14px;margin-bottom:12px;}
+.wt{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(–grey);font-weight:700;margin-bottom:10px;}
+.aitem{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(–grey2);}
+.aitem:last-child{border:none;}
+.adot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.atext{font-size:13px;color:#bbb;line-height:1.4;}
+.atext strong{color:var(–white);}
+.atime{font-size:11px;color:var(–grey);margin-top:1px;}
+.empty{text-align:center;padding:24px;color:var(–grey);font-size:13px;}
+.sep{height:1px;background:var(–grey2);margin:12px 0;}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(–grey);cursor:pointer;font-size:13px;margin-bottom:14px;padding:7px 12px;border-radius:7px;border:1px solid var(–grey3);background:var(–dark);}
+.back:hover{color:var(–gold);border-color:var(–gold);}
 </style>
+
 </head>
 <body>
 
-<div class="top">
-<h1>VBesta Scout</h1>
-<span class="sync" id="sync-status">Připojování...</span>
+<nav>
+<div class="logo">VBesta <span>Scout</span></div>
+<div class="sync" onclick="cloud()">
+<div class="sd" id="sd"></div>
+<span id="slbl">Sync</span>
 </div>
+</nav>
 
 <div class="tabs">
-<button class="tab on" onclick="showTab('dash')">◈ Přehled</button>
-<button class="tab" onclick="showTab('players')">👤 Hráči</button>
-<button class="tab" onclick="showTab('inbox')">✉ Poptávky</button>
-<button class="tab" onclick="showTab('notes')">✎ Poznámky</button>
+<div class="tab on" onclick="T('dash')">◈ Přehled</div>
+<div class="tab" onclick="T('players')">👤 Hráči</div>
+<div class="tab" id="tab-det" style="display:none" onclick="T('detail')">📋 Profil</div>
+<div class="tab" onclick="T('notes')">✎ Poznámky</div>
 </div>
 
 <!-- DASHBOARD -->
 
-<div class="page on" id="tab-dash">
-<div class="stat-grid">
-<div class="stat"><div class="stat-n" id="st0">0</div><div class="stat-l">Hráčů celkem</div></div>
-<div class="stat g"><div class="stat-n" id="st1">0</div><div class="stat-l">Aktivní</div></div>
-<div class="stat b"><div class="stat-n" id="st2">0</div><div class="stat-l">Poptávky</div></div>
-<div class="stat p"><div class="stat-n" id="st3">0</div><div class="stat-l">Casting</div></div>
-</div>
-<div class="form-box">
-<h2>Pipeline přehled</h2>
-<div id="dash-pipeline">Zatím žádní hráči</div>
-</div>
-<div class="form-box">
-<h2>Poslední aktivita</h2>
-<div id="dash-activity">Zatím žádná aktivita</div>
-</div>
-<button class="btn btn-grey" onclick="exportCSV()">⬇ Export do CSV</button>
+<div class="page on" id="pg-dash">
+<div class="sec-title">Dashboard</div>
+<div class="sec-sub">VBesta Scout CRM — klikni na fázi pro zobrazení hráčů</div>
+
+<!-- Celkem + fáze -->
+
+<div style="background:var(--dark);border:1px solid var(--goldbor);border-radius:10px;padding:14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+<div><div style="font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--gold);line-height:1" id="st-all">0</div><div style="font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--grey)">Hráčů celkem</div></div>
+<button class="btn btn-gold btn-sm" onclick="T('players');scrollTo(0,0)">+ Přidat hráče</button>
 </div>
 
-<!-- HRÁČI -->
+<!-- Všechny fáze — pouze jednou -->
 
-<div class="page" id="tab-players">
-<div class="form-box" id="form-player" style="display:none">
-<h2 id="form-player-title">+ Přidat hráče</h2>
-<label>Jméno a příjmení *</label>
-<input id="p-name" placeholder="Jan Novák">
-<div class="row2">
-<div><label>Věk</label><input id="p-age" type="number" placeholder="22"></div>
-<div><label>Pozice</label>
-<select id="p-pos"><option>Brankář</option><option>Obránce</option><option selected>Záložník</option><option>Útočník</option><option>Jiné</option></select>
+<div class="phase-grid" id="phase-grid"></div>
+
+<!-- Aktivita + akce -->
+
+<div class="widget">
+<div class="wt">Poslední aktivita</div>
+<div id="da"><div class="empty" style="padding:8px">Zatím žádná aktivita</div></div>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<button class="btn btn-gold" style="flex:1" onclick="T('players');scrollTo(0,0)">+ Přidat hráče</button>
+<button class="btn btn-dark" style="flex:1" onclick="exportCSV()">⬇ Export CSV</button>
 </div>
 </div>
-<label>Status</label>
-<select id="p-status">
-<option value="new">Nový kontakt</option>
-<option value="talks">Rozjednáno</option>
-<option value="signed">Podepsáno</option>
-<option value="casting">Casting</option>
-<option value="placed">Udáno</option>
-<option value="inactive">Neodbaveno</option>
+
+<!-- PLAYERS -->
+
+<div class="page" id="pg-players">
+<div class="sec-title">Hráči</div>
+<div class="sec-sub">Kompletní databáze</div>
+
+<!-- Přidat hráče - accordion -->
+
+<div class="acc" id="acc-addplayer">
+<div class="acc-hdr" onclick="tog('acc-addplayer')">
+<div class="acc-title">✦ <span id="fpt">Přidat nového hráče</span></div>
+<span class="acc-arrow">▶</span>
+</div>
+<div class="acc-body">
+<div class="f2">
+<div class="fg"><label>Jméno a příjmení *</label><input class="fi" id="p-name" placeholder="Jan Novák"></div>
+<div class="fg"><label>Věk</label><input class="fi" id="p-age" type="number" placeholder="22"></div>
+</div>
+<div class="f2">
+<div class="fg"><label>Pozice</label><select class="fs" id="p-pos"><option>Brankář</option><option>Obránce</option><option selected>Záložník</option><option>Útočník</option><option>Jiné</option></select></div>
+<div class="fg"><label>Fáze spolupráce</label>
+<select class="fs" id="p-status">
+<option value="s1">Nový kontakt</option><option value="s2">Odbaveno 1. fáze</option>
+<option value="s3">Užší výběr</option><option value="s4">Rozjednáno</option>
+<option value="s5">Podepsáno VBS</option><option value="s6">Angažmá ✅</option><option value="s7">Nevybraní</option>
 </select>
-<div class="row2">
-<div><label>Aktuální tým</label><input id="p-team" placeholder="FK Příklad"></div>
-<div><label>Soutěž / Liga</label><input id="p-league" placeholder="Krajský přebor"></div>
 </div>
-<div class="row2">
-<div><label>Město</label><input id="p-city" placeholder="Praha"></div>
-<div><label>Telefon</label><input id="p-phone" placeholder="+420..."></div>
 </div>
-<div class="row2">
-<div><label>Instagram</label><input id="p-ig" placeholder="@handle"></div>
-<div><label>Národnost</label><input id="p-nat" placeholder="CZ"></div>
+<div class="f2">
+<div class="fg"><label>Program</label><select class="fs" id="p-prog"><option value="s">Hledání angažmá</option><option value="p">Like a PRO program</option></select></div>
+<div class="fg"><label>Dominantní noha</label><select class="fs" id="p-foot"><option value="">—</option><option>Pravá</option><option>Levá</option><option>Obounohý</option></select></div>
 </div>
-<div class="row2">
-<div><label>Výška (cm)</label><input id="p-height" type="number" placeholder="180"></div>
-<div><label>Dom. noha</label><select id="p-foot"><option value="">—</option><option>Pravá</option><option>Levá</option><option>Obounohý</option></select></div>
+<div class="f2">
+<div class="fg"><label>Aktuální tým</label><input class="fi" id="p-team" placeholder="FK Příklad"></div>
+<div class="fg"><label>Soutěž / Liga</label><input class="fi" id="p-league" placeholder="Krajský přebor"></div>
 </div>
-<label>Cílový klub / liga</label>
-<input id="p-target" placeholder="Kreisliga Bayern...">
-<label>Poznámka</label>
-<textarea id="p-note" placeholder="Zkušenosti, silné stránky..."></textarea>
-<button class="btn btn-gold" id="player-save-btn" onclick="savePlayer()">Uložit hráče</button>
-<button class="btn btn-grey" onclick="hidePlayerForm()" style="margin-top:6px">Zrušit</button>
+<div class="f3">
+<div class="fg"><label>Bydliště</label><input class="fi" id="p-city" placeholder="Praha"></div>
+<div class="fg"><label>Výška cm</label><input class="fi" id="p-h" type="number" placeholder="182"></div>
+<div class="fg"><label>Váha kg</label><input class="fi" id="p-w" type="number" placeholder="76"></div>
 </div>
-
-<button class="btn btn-gold" onclick="showPlayerForm()" id="add-player-btn">+ Přidat hráče</button>
-
-<div class="filter-row" id="filter-row">
-<button class="fb on" onclick="setFilter('all',this)">Vše</button>
-<button class="fb" onclick="setFilter('new',this)">Nový</button>
-<button class="fb" onclick="setFilter('talks',this)">Rozjednáno</button>
-<button class="fb" onclick="setFilter('signed',this)">Podepsáno</button>
-<button class="fb" onclick="setFilter('casting',this)">Casting</button>
-<button class="fb" onclick="setFilter('placed',this)">Udáno</button>
-<button class="fb" onclick="setFilter('inactive',this)">Neodbaveno</button>
+<div class="f2">
+<div class="fg"><label>Telefon</label><input class="fi" id="p-phone" placeholder="+420..."></div>
+<div class="fg"><label>Instagram</label><input class="fi" id="p-ig" placeholder="@handle"></div>
+</div>
+<div class="fg"><label>Odkaz na video</label><input class="fi" id="p-vid" placeholder="YouTube, Google Drive, Wyscout..."></div>
+<div class="fg"><label>Poznámka</label><textarea class="ft" id="p-note" placeholder="Dojmy ze schůzky, silné/slabé stránky..."></textarea></div>
+<button class="btn btn-gold btn-full" id="p-sbtn" onclick="savePlayer()">✓ Uložit hráče</button>
+<button class="btn btn-dark btn-full" id="p-cbtn" onclick="cancelEdit()" style="display:none;margin-top:6px">✕ Zrušit úpravy</button>
+</div>
 </div>
 
-<div id="players-list"></div>
+<div class="filters">
+<button class="fb on" data-f="all" onclick="setF('all',this)">Vše</button>
+<button class="fb" data-f="s1" onclick="setF('s1',this)">Nový kontakt</button>
+<button class="fb" data-f="s2" onclick="setF('s2',this)">Odbaveno 1.</button>
+<button class="fb" data-f="s3" onclick="setF('s3',this)">Užší výběr</button>
+<button class="fb" data-f="s4" onclick="setF('s4',this)">Rozjednáno</button>
+<button class="fb" data-f="s5" onclick="setF('s5',this)">Podepsáno VBS</button>
+<button class="fb" data-f="s6" onclick="setF('s6',this)">Angažmá ✅</button>
+<button class="fb" data-f="s7" onclick="setF('s7',this)">Nevybraní</button>
+</div>
+<div id="pl"></div>
 </div>
 
 <!-- DETAIL -->
 
-<div class="page" id="tab-detail">
-<div id="detail-content"></div>
-</div>
-
-<!-- INBOX -->
-
-<div class="page" id="tab-inbox">
-<div class="form-box" id="form-inq" style="display:none">
-<h2>+ Přidat poptávku</h2>
-<div class="row2">
-<div><label>Jméno *</label><input id="i-name" placeholder="Tomáš Svoboda"></div>
-<div><label>Platforma</label><select id="i-plat"><option>Instagram</option><option>TikTok</option><option>Email</option><option>WhatsApp</option><option>Jiné</option></select></div>
-</div>
-<label>Zpráva</label>
-<textarea id="i-msg" placeholder="Co nám napsal/a..."></textarea>
-<div class="row2">
-<div><label>Kontakt</label><input id="i-contact" placeholder="@handle nebo email"></div>
-<div><label>Priorita</label><select id="i-prio"><option>Normální</option><option>Vysoká</option><option>Nízká</option></select></div>
-</div>
-<button class="btn btn-gold" onclick="saveInq()">Uložit poptávku</button>
-<button class="btn btn-grey" onclick="document.getElementById('form-inq').style.display='none'" style="margin-top:6px">Zrušit</button>
-</div>
-<button class="btn btn-gold" onclick="document.getElementById('form-inq').style.display='block'">+ Přidat poptávku</button>
-<div id="inbox-list" style="margin-top:14px"></div>
-</div>
+<div class="page" id="pg-detail"><div id="dc"></div></div>
 
 <!-- NOTES -->
 
-<div class="page" id="tab-notes">
-<div class="form-box" id="form-note" style="display:none">
-<h2>+ Přidat poznámku</h2>
-<label>Nadpis</label><input id="n-title" placeholder="Název...">
-<label>Text</label><textarea id="n-text" class="notes"></textarea>
-<label>Autor</label><select id="n-auth"><option>Vojtěch</option><option>Kolega</option></select>
-<button class="btn btn-gold" onclick="saveNote()">Uložit poznámku</button>
-<button class="btn btn-grey" onclick="document.getElementById('form-note').style.display='none'" style="margin-top:6px">Zrušit</button>
+<div class="page" id="pg-notes">
+<div class="sec-title">Poznámky</div>
+<div class="sec-sub">Sdílené poznámky týmu</div>
+<div class="acc">
+<div class="acc-hdr" onclick="tog(this.parentElement)">
+<div class="acc-title">✦ Přidat poznámku</div>
+<span class="acc-arrow">▶</span>
 </div>
-<button class="btn btn-gold" onclick="document.getElementById('form-note').style.display='block'">+ Přidat poznámku</button>
-<div id="notes-list" style="margin-top:14px"></div>
+<div class="acc-body">
+<div class="fg"><label>Nadpis</label><input class="fi" id="n-title" placeholder="Název..."></div>
+<div class="fg"><label>Text</label><textarea class="ft" id="n-text" style="min-height:90px"></textarea></div>
+<div class="fg"><label>Autor</label><select class="fs" id="n-auth"><option>Vojtěch</option><option>Kolega</option></select></div>
+<button class="btn btn-gold btn-full" onclick="saveNote()">✓ Uložit poznámku</button>
+</div>
+</div>
+<div id="nl"></div>
 </div>
 
 <script>
-var BIN = '69cd63b436566621a86ddb64';
-var MKEY = '$2a$10$VdMx.HilPtQKvGTs7C047.c6sZ7jsgm/q.LIls.q/peTXN4Vdlb3W';
-var DB = {talents:[],inquiries:[],notes:[],activities:[]};
-var currentFilter = 'all';
-var prevTab = 'players';
-var editId = null;
-var saving = false;
-
-var ST = {
-new: {l:'Nový kontakt', c:'b-new', col:'#6a9fd8'},
-talks: {l:'Rozjednáno', c:'b-talks', col:'#e8c84a'},
-signed: {l:'Podepsáno', c:'b-signed', col:'#4caf7d'},
-placed: {l:'Udáno', c:'b-placed', col:'#c9a84c'},
-casting: {l:'Casting', c:'b-casting', col:'#a07ac8'},
-inactive:{l:'Neodbaveno', c:'b-inactive',col:'#5a5850'}
+var BIN='69cd63b436566621a86ddb64',MKEY='$2a$10$VdMx.HilPtQKvGTs7C047.c6sZ7jsgm/q.LIls.q/peTXN4Vdlb3W';
+var DB={players:[],notes:[],activities:[]};
+var cf='all',prevT='players',eid=null,saving=false;
+var ST={
+s1:{l:'Nový kontakt',bc:'b1',col:'#6a9fd8'},
+s2:{l:'Odbaveno 1. fáze',bc:'b2',col:'#e8c84a'},
+s3:{l:'Užší výběr',bc:'b3',col:'#e8944a'},
+s4:{l:'Rozjednáno',bc:'b4',col:'#a07ac8'},
+s5:{l:'Podepsáno VBS',bc:'b5',col:'#D4A843'},
+s6:{l:'Angažmá ✅',bc:'b6',col:'#4caf7d'},
+s7:{l:'Nevybraní',bc:'b7',col:'#555'}
 };
 
-function ini(n){
-return (n||'?').split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
-}
-function fd(iso){
-if(!iso) return '—';
-return new Date(iso).toLocaleDateString('cs');
-}
-function badge(s){
-var t = ST[s]||ST.new;
-return '<span class="badge '+t.c+'">'+t.l+'</span>';
-}
-function lsSave(){
-try{localStorage.setItem('vbdb',JSON.stringify(DB));}catch(e){}
-}
-function lsLoad(){
-try{
-var d = JSON.parse(localStorage.getItem('vbdb')||'{}');
-DB.talents = d.talents || [];
-DB.inquiries = d.inquiries || [];
-DB.notes = d.notes || [];
-DB.activities = d.activities || [];
-}catch(e){}
-}
-function logA(txt,col){
-DB.activities.unshift({txt:txt,col:col,t:new Date().toLocaleString('cs')});
-if(DB.activities.length>40) DB.activities.pop();
-}
-function setSS(msg,cls){
-var el = document.getElementById('sync-status');
-el.textContent = msg;
-el.className = 'sync '+(cls||'');
+function g(id){return document.getElementById(id);}
+function fd(iso){if(!iso)return'—';return new Date(iso).toLocaleDateString('cs');}
+function bdg(s){var t=ST[s]||ST.s1;return'<span class="badge '+t.bc+'">'+t.l+'</span>';}
+function prdg(p){return p==='p'?'<span class="prog-p">Like a PRO</span>':'<span class="prog-s">Hledání angažmá</span>';}
+function lsS(){try{localStorage.setItem('vb11',JSON.stringify(DB));}catch(e){}}
+function lsL(){try{var d=JSON.parse(localStorage.getItem('vb11')||'{}');DB.players=d.players||[];DB.notes=d.notes||[];DB.activities=d.activities||[];}catch(e){}}
+function logA(t,c){DB.activities.unshift({txt:t,col:c,ts:new Date().toLocaleString('cs')});if(DB.activities.length>50)DB.activities.pop();}
+function setSS(m,s){if(g('sd'))g('sd').className='sd '+(s||'');if(g('slbl'))g('slbl').textContent=m;}
+
+// ACCORDION TOGGLE
+function tog(el){
+if(typeof el==='string')el=g(el);
+if(!el)return;
+el.classList.toggle('open');
 }
 
-// CLOUD
-function loadCloud(){
-setSS('Načítám...','');
-fetch('https://api.jsonbin.io/v3/b/'+BIN+'/latest',{
-headers:{'X-Master-Key':MKEY,'X-Bin-Meta':'false'}
-}).then(function(r){
-if(!r.ok) throw new Error(r.status);
-return r.json();
-}).then(function(d){
-DB.talents = d.talents || [];
-DB.inquiries = d.inquiries || [];
-DB.notes = d.notes || [];
-DB.activities = d.activities || [];
-setSS('● Synchronizováno','ok');
-lsSave(); renderAll();
-}).catch(function(){
-setSS('● Offline - lokálně','err');
-lsLoad(); renderAll();
-});
+function cloud(){
+setSS('...','sp');
+fetch('https://api.jsonbin.io/v3/b/'+BIN+'/latest',{headers:{'X-Master-Key':MKEY,'X-Bin-Meta':'false'}})
+.then(function(r){if(!r.ok)throw r;return r.json();})
+.then(function(d){
+DB.players=d.players||[];DB.notes=d.notes||[];DB.activities=d.activities||[];
+setSS('✓ Sync','ok');lsS();renderAll();
+}).catch(function(){setSS('Offline','err');lsL();renderAll();});
 }
-
-function saveCloud(){
-if(saving) return;
-saving = true;
-setSS('Ukládám...','');
-lsSave();
-fetch('https://api.jsonbin.io/v3/b/'+BIN,{
-method:'PUT',
-headers:{'Content-Type':'application/json','X-Master-Key':MKEY},
-body:JSON.stringify(DB)
-}).then(function(r){
-if(!r.ok) throw new Error(r.status);
-setSS('● Uloženo','ok');
-setTimeout(function(){setSS('● Synchronizováno','ok');},2000);
-}).catch(function(){
-setSS('● Lokálně uloženo','err');
-}).then(function(){saving=false;});
+function save(){
+if(saving)return;saving=true;setSS('Ukládám...','sp');lsS();
+fetch('https://api.jsonbin.io/v3/b/'+BIN,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':MKEY},body:JSON.stringify(DB)})
+.then(function(r){if(!r.ok)throw r;setSS('✓ Uloženo','ok');setTimeout(function(){setSS('✓ Sync','ok');},2000);})
+.catch(function(){setSS('Lokálně ✓','err');}).then(function(){saving=false;});
 }
 
 // TABS
-function showTab(id){
-if(id !== 'detail') prevTab = id;
+function T(id){
+if(id!=='detail')prevT=id;
 document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
 document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('on');});
-document.getElementById('tab-'+id).classList.add('on');
-var tabs = ['dash','players','inbox','notes'];
-var idx = tabs.indexOf(id);
-if(idx >= 0) document.querySelectorAll('.tab')[idx].classList.add('on');
-if(id==='dash') renderDash();
-if(id==='players') renderPlayers();
-if(id==='inbox') renderInbox();
-if(id==='notes') renderNotes();
+if(g('pg-'+id))g('pg-'+id).classList.add('on');
+var map={'dash':0,'players':1,'detail':2,'notes':3};
+var ts=document.querySelectorAll('.tab');
+if(map[id]!==undefined&&ts[map[id]])ts[map[id]].classList.add('on');
+if(id==='dash')rDash();
+if(id==='players')rPlayers();
+if(id==='notes')rNotes();
+scrollTo(0,0);
+}
+
+// GO TO FILTER
+function goF(f){
+cf=f;T('players');
+document.querySelectorAll('.fb').forEach(function(b){
+b.classList.toggle('on',b.getAttribute('data-f')===f);
+});
+rPlayers();
 }
 
 // PLAYER FORM
-function showPlayerForm(){
-editId = null;
-document.getElementById('form-player-title').textContent = '+ Přidat hráče';
-document.getElementById('player-save-btn').textContent = 'Uložit hráče';
-document.getElementById('form-player').style.display = 'block';
-document.getElementById('add-player-btn').style.display = 'none';
-window.scrollTo(0,0);
+function gf(){
+return{name:g('p-name').value.trim(),age:g('p-age').value,pos:g('p-pos').value,
+status:g('p-status').value,prog:g('p-prog').value,foot:g('p-foot').value,
+team:g('p-team').value.trim(),league:g('p-league').value.trim(),city:g('p-city').value.trim(),
+h:g('p-h').value,w:g('p-w').value,phone:g('p-phone').value.trim(),ig:g('p-ig').value.trim(),
+vid:g('p-vid').value.trim(),note:g('p-note').value.trim()};
 }
-function hidePlayerForm(){
-document.getElementById('form-player').style.display = 'none';
-document.getElementById('add-player-btn').style.display = 'block';
-clearPlayerForm();
-editId = null;
+function clrF(){
+['p-name','p-age','p-team','p-league','p-city','p-h','p-w','p-phone','p-ig','p-vid','p-note'].forEach(function(i){if(g(i))g(i).value='';});
+if(g('p-status'))g('p-status').value='s1';if(g('p-foot'))g('p-foot').value='';if(g('p-prog'))g('p-prog').value='s';
+if(g('fpt'))g('fpt').textContent='Přidat nového hráče';
+if(g('p-sbtn'))g('p-sbtn').textContent='✓ Uložit hráče';
+if(g('p-cbtn'))g('p-cbtn').style.display='none';
+eid=null;
+var acc=g('acc-addplayer');if(acc)acc.classList.remove('open');
 }
-function clearPlayerForm(){
-['p-name','p-age','p-team','p-league','p-city','p-phone','p-ig','p-nat','p-height','p-target','p-note'].forEach(function(id){
-var el = document.getElementById(id);
-if(el) el.value = '';
-});
-document.getElementById('p-status').value = 'new';
-document.getElementById('p-foot').value = '';
-}
-function getForm(){
-return {
-name: document.getElementById('p-name').value.trim(),
-age: document.getElementById('p-age').value,
-pos: document.getElementById('p-pos').value,
-status: document.getElementById('p-status').value,
-team: document.getElementById('p-team').value.trim(),
-league: document.getElementById('p-league').value.trim(),
-city: document.getElementById('p-city').value.trim(),
-phone: document.getElementById('p-phone').value.trim(),
-ig: document.getElementById('p-ig').value.trim(),
-nat: document.getElementById('p-nat').value.trim(),
-height: document.getElementById('p-height').value,
-foot: document.getElementById('p-foot').value,
-target: document.getElementById('p-target').value.trim(),
-note: document.getElementById('p-note').value.trim()
-};
-}
-
 function savePlayer(){
-var d = getForm();
-if(!d.name){alert('Vyplňte jméno hráče!');return;}
-if(editId){
-var t = DB.talents.filter(function(x){return x.id===editId;})[0];
-if(t){
-Object.assign(t,d);
-logA('<strong>'+t.name+'</strong> aktualizován','#c9a84c');
-}
+var d=gf();if(!d.name){alert('Vyplňte jméno hráče!');return;}
+if(eid){
+var p=DB.players.filter(function(x){return x.id===eid;})[0];
+if(p){Object.assign(p,d);logA('<strong>'+p.name+'</strong> aktualizován','#D4A843');}
+clrF();renderAll();save();openDetail(eid);
 } else {
-var nt = {id:Date.now(),videos:[],email:'',added:new Date().toISOString()};
-Object.assign(nt,d);
-DB.talents.unshift(nt);
-logA('<strong>'+d.name+'</strong> přidán jako nový hráč',ST[d.status].col);
+var np={id:Date.now(),videos:[],matches:[],faktury:[],reportPhotos:[],
+poj:false,prace:false,byd:false,sp:false,sp_sent:false,
+provize:'',ang_team:'',ang_league:'',report:'',note2:'',added:new Date().toISOString()};
+Object.assign(np,d);DB.players.unshift(np);
+logA('<strong>'+d.name+'</strong> přidán',ST[d.status].col);
+clrF();renderAll();save();
 }
-hidePlayerForm();
-renderAll();
-saveCloud();
 }
-
-function openEdit(id){
-var t = DB.talents.filter(function(x){return x.id===id;})[0];
-if(!t) return;
-editId = id;
-document.getElementById('form-player-title').textContent = '✏ Upravit hráče';
-document.getElementById('player-save-btn').textContent = 'Uložit změny';
-var map = {'p-name':t.name,'p-age':t.age||'','p-team':t.team||'','p-league':t.league||'',
-'p-city':t.city||'','p-phone':t.phone||'','p-ig':t.ig||'','p-nat':t.nat||'',
-'p-height':t.height||'','p-target':t.target||'','p-note':t.note||''};
-Object.keys(map).forEach(function(k){
-var el = document.getElementById(k);
-if(el) el.value = map[k];
-});
-document.getElementById('p-pos').value = t.pos || 'Záložník';
-document.getElementById('p-status').value = t.status || 'new';
-document.getElementById('p-foot').value = t.foot || '';
-showTab('players');
-document.getElementById('form-player').style.display = 'block';
-document.getElementById('add-player-btn').style.display = 'none';
-window.scrollTo(0,0);
+function cancelEdit(){clrF();T(prevT);}
+function startEdit(id){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+eid=id;T('players');
+var m={'p-name':p.name,'p-age':p.age||'','p-team':p.team||'','p-league':p.league||'','p-city':p.city||'','p-h':p.h||'','p-w':p.w||'','p-phone':p.phone||'','p-ig':p.ig||'','p-vid':p.vid||'','p-note':p.note||''};
+Object.keys(m).forEach(function(k){if(g(k))g(k).value=m[k];});
+if(g('p-pos'))g('p-pos').value=p.pos||'Záložník';
+if(g('p-status'))g('p-status').value=p.status||'s1';
+if(g('p-foot'))g('p-foot').value=p.foot||'';
+if(g('p-prog'))g('p-prog').value=p.prog||'s';
+if(g('fpt'))g('fpt').textContent='Upravit: '+p.name;
+if(g('p-sbtn'))g('p-sbtn').textContent='✓ Uložit změny';
+if(g('p-cbtn'))g('p-cbtn').style.display='block';
+var acc=g('acc-addplayer');if(acc)acc.classList.add('open');
+scrollTo(0,0);
 }
-
 function delPlayer(id){
-var t = DB.talents.filter(function(x){return x.id===id;})[0];
-if(!t||!confirm('Smazat hráče "'+t.name+'"?')) return;
-DB.talents = DB.talents.filter(function(x){return x.id!==id;});
-logA('<strong>'+t.name+'</strong> smazán','#e06060');
-showTab(prevTab);
-saveCloud();
+var p=DB.players.filter(function(x){return x.id===id;})[0];
+if(!p||!confirm('Smazat hráče "'+p.name+'"?'))return;
+DB.players=DB.players.filter(function(x){return x.id!==id;});
+logA('<strong>'+p.name+'</strong> smazán','#e06060');
+if(g('tab-det'))g('tab-det').style.display='none';
+T(prevT);save();
+}
+function updSt(id,val){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+p.status=val;logA('<strong>'+p.name+'</strong> → '+ST[val].l,ST[val].col);rDash();save();
+}
+function togF(id,f){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+p[f]=!p[f];rDetail(p);save();
+}
+function saveDF(id,f,val){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+p[f]=val;save();
+}
+function saveRep(id){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+if(g('rep-'+id))p.report=g('rep-'+id).value;
+var b=g('repsave-'+id);if(b){b.textContent='✓ Uloženo!';setTimeout(function(){b.textContent='💾 Uložit report';},1800);}save();
+}
+function savePNote(id){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+if(g('pn-'+id))p.note=g('pn-'+id).value;
+var b=g('pnsave-'+id);if(b){b.textContent='✓ Uloženo!';setTimeout(function(){b.textContent='💾 Uložit poznámky';},1800);}save();
 }
 
-function updStatus(id,val){
-var t = DB.talents.filter(function(x){return x.id===id;})[0];
-if(!t) return;
-t.status = val;
-logA('<strong>'+t.name+'</strong> → '+ST[val].l,ST[val].col);
-renderDash();
-saveCloud();
+function savePNote2(id){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+if(g('pn2-'+id))p.note2=g('pn2-'+id).value;
+var b=g('pn2save-'+id);if(b){b.textContent='✓ Uloženo!';setTimeout(function(){b.textContent='💾 Uložit poznámky';},1800);}save();
+}
+
+// PHOTOS
+function addPhoto(id,input){
+var file=input.files[0];if(!file)return;
+var reader=new FileReader();
+reader.onload=function(e){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+if(!p.reportPhotos)p.reportPhotos=[];
+p.reportPhotos.push(e.target.result);
+if(g('rphotos-'+id))g('rphotos-'+id).innerHTML=rPhotos(p);
+save();
+};
+reader.readAsDataURL(file);
+}
+function delPhoto(id,i){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+p.reportPhotos.splice(i,1);
+if(g('rphotos-'+id))g('rphotos-'+id).innerHTML=rPhotos(p);save();
+}
+function rPhotos(p){
+if(!p.reportPhotos||!p.reportPhotos.length)return'<div class="empty" style="padding:8px">Zatím žádné fotky</div>';
+var h='<div class="photo-grid">';
+p.reportPhotos.forEach(function(src,i){
+h+='<div class="photo-wrap"><img src="'+src+'"><button class="photo-del" onclick="delPhoto('+p.id+','+i+')">✕</button></div>';
+});
+return h+'</div>';
+}
+
+// MATCHES
+function addMatch(id){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+var dat=g('md-'+id)&&g('md-'+id).value;if(!dat){alert('Vyplňte datum!');return;}
+if(!p.matches)p.matches=[];
+p.matches.unshift({dat:dat,sout:g('ms-'+id)&&g('ms-'+id).value||'',hral:g('mh-'+id)&&g('mh-'+id).value||'ano',min:g('mm-'+id)&&g('mm-'+id).value||'',gol:g('mg-'+id)&&g('mg-'+id).value||'0',karta:g('mk-'+id)&&g('mk-'+id).value||'zadna'});
+if(g('md-'+id))g('md-'+id).value='';if(g('ms-'+id))g('ms-'+id).value='';if(g('mm-'+id))g('mm-'+id).value='';if(g('mg-'+id))g('mg-'+id).value='';
+if(g('match-list-'+id))g('match-list-'+id).innerHTML=rMatches(p);save();
+}
+function delMatch(pid,i){
+var p=DB.players.filter(function(x){return x.id===pid;})[0];if(!p)return;
+p.matches.splice(i,1);if(g('match-list-'+pid))g('match-list-'+pid).innerHTML=rMatches(p);save();
+}
+function rMatches(p){
+if(!p.matches||!p.matches.length)return'<div class="empty" style="padding:8px">Zatím žádné záznamy</div>';
+return'<div class="stbl-wrap"><table class="stbl"><thead><tr><th>Datum</th><th>Soupeř</th><th>Hrál</th><th>Min</th><th>⚽</th><th>Karta</th><th></th></tr></thead><tbody>'
++p.matches.map(function(m,i){return'<tr><td style="white-space:nowrap">'+m.dat+'</td><td>'+(m.sout||'—')+'</td><td>'+(m.hral==='ano'?'<span style="color:var(--green)">✓</span>':'<span style="color:var(--red)">✗</span>')+'</td><td>'+(m.min||'—')+'</td><td style="font-weight:700;color:'+(m.gol>0?'var(--green)':'var(--white)')+'">'+m.gol+'</td><td>'+(m.karta==='zluta'?'🟡':m.karta==='cervena'?'🔴':'—')+'</td><td><button class="vdel" onclick="delMatch('+p.id+','+i+')">✕</button></td></tr>';}).join('')
++'</tbody></table></div>';
+}
+
+// FAKTURY
+function addFak(id){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+var n=g('fn-'+id)&&g('fn-'+id).value.trim();if(!n){alert('Vyplňte název!');return;}
+if(!p.faktury)p.faktury=[];
+p.faktury.unshift({n:n,c:g('fc-'+id)&&g('fc-'+id).value||'',s:g('fs-'+id)&&g('fs-'+id).value||'Odeslana',d:new Date().toISOString()});
+if(g('fn-'+id))g('fn-'+id).value='';if(g('fc-'+id))g('fc-'+id).value='';
+if(g('fak-list-'+id))g('fak-list-'+id).innerHTML=rFaktury(p);save();
+}
+function delFak(pid,i){
+var p=DB.players.filter(function(x){return x.id===pid;})[0];if(!p)return;
+p.faktury.splice(i,1);if(g('fak-list-'+pid))g('fak-list-'+pid).innerHTML=rFaktury(p);save();
+}
+function togFak(pid,i){
+var p=DB.players.filter(function(x){return x.id===pid;})[0];if(!p)return;
+p.faktury[i].s=p.faktury[i].s==='Proplacena'?'Odeslana':'Proplacena';
+if(g('fak-list-'+pid))g('fak-list-'+pid).innerHTML=rFaktury(p);save();
+}
+function rFaktury(p){
+if(!p.faktury||!p.faktury.length)return'<div class="empty" style="padding:8px">Zatím žádné faktury</div>';
+return p.faktury.map(function(f,i){
+return'<div class="fak"><div class="fak-i"><div class="fak-name">'+f.n+'</div><div class="fak-meta">'+(f.c?f.c+' €':'')+' · '+fd(f.d)+'</div></div>'
++'<div class="fak-r"><span class="fak-s '+(f.s==='Proplacena'?'fak-paid':'fak-sent')+'" onclick="togFak('+p.id+','+i+')">'+f.s+'</span>'
++'<button class="vdel" onclick="delFak('+p.id+','+i+')">✕</button></div></div>';
+}).join('');
+}
+
+// VIDEOS
+function addVid(id){
+var inp=g('vi-'+id);var url=(inp&&inp.value||'').trim();if(!url)return;
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+if(!p.videos)p.videos=[];p.videos.push(url);inp.value='';
+if(g('vl-'+id))g('vl-'+id).innerHTML=rVids(p);save();
+}
+function remVid(id,i){
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+p.videos.splice(i,1);if(g('vl-'+id))g('vl-'+id).innerHTML=rVids(p);save();
+}
+function rVids(p){
+if(!p.videos||!p.videos.length)return'<div class="empty" style="padding:6px">Zatím žádná videa</div>';
+return p.videos.map(function(v,i){
+var m=v.match(/(?:v=|youtu\.be\/)([^&?\/]+)/);
+var e=m?'<iframe class="vembed" src="https://www.youtube.com/embed/'+m[1]+'" allowfullscreen></iframe>':'';
+return e+'<div class="vitem"><span style="color:var(--gold)">▶</span><a href="'+v+'" target="_blank">'+v+'</a><button class="vdel" onclick="remVid('+p.id+','+i+')">✕</button></div>';
+}).join('');
+}
+
+// HELPER
+function ir(k,v){return'<div class="irow"><span class="ik">'+k+'</span><span class="iv">'+v+'</span></div>';}
+function chk(pid,f,val,lbl){
+return'<div class="chk"><div class="chk-l"><span>'+(val?'✅':'⬜')+'</span><span>'+lbl+'</span></div>'
++'<div class="chk-r"><span class="'+(val?'chk-ok':'chk-no')+'">'+(val?'Hotovo':'Čeká')+'</span>'
++'<button class="btn btn-dark btn-sm" onclick="togF('+pid+',\''+f+'\')">Změnit</button></div></div>';
+}
+
+// SACC = sub accordion helper
+function sacc(id,title,bodyHtml){
+return'<div class="sacc" id="sacc-'+id+'"><div class="sacc-hdr" onclick="tog(\'sacc-'+id+'\')">'
++'<div class="sacc-title">'+title+'</div><span class="sacc-arrow">▶</span></div>'
++'<div class="sacc-body">'+bodyHtml+'</div></div>';
 }
 
 // DETAIL
 function openDetail(id){
-var t = DB.talents.filter(function(x){return x.id===id;})[0];
-if(!t) return;
-showTab('detail');
-renderDetail(t);
+var p=DB.players.filter(function(x){return x.id===id;})[0];if(!p)return;
+if(g('tab-det'))g('tab-det').style.display='';
+T('detail');rDetail(p);
 }
 
-function renderDetail(t){
-var st = ST[t.status]||ST.new;
-var html = '<span class="back" onclick="showTab(prevTab)">← Zpět</span>';
-html += '<div class="detail-box">';
-html += '<h2>'+t.name+'</h2>';
-html += '<div style="margin-bottom:10px">'+badge(t.status);
-if(t.pos) html += ' <span class="badge" style="background:#222;color:#aaa">'+t.pos+'</span>';
-if(t.age) html += ' <span class="badge" style="background:#222;color:#aaa">'+t.age+' let</span>';
-html += '</div>';
-html += '<label>Změnit status</label>';
-html += '<select onchange="updStatus('+t.id+',this.value)" style="margin-bottom:12px">';
-Object.keys(ST).forEach(function(k){
-html += '<option value="'+k+'"'+(t.status===k?' selected':'')+'>'+ST[k].l+'</option>';
-});
-html += '</select>';
-html += '<div style="display:flex;gap:8px">';
-html += '<button class="btn btn-grey" style="margin-top:0" onclick="openEdit('+t.id+')">✏ Upravit</button>';
-html += '<button class="btn btn-red" style="margin-top:0" onclick="delPlayer('+t.id+')">🗑 Smazat</button>';
-html += '</div></div>';
+function rDetail(p){
+var h='<div class="back" onclick="T(prevT)">← Zpět</div>';
 
-html += '<div class="detail-box"><h2>Základní info</h2>';
-html += ir('Tým', t.team||'—')+ir('Soutěž',t.league||'—')+ir('Město',t.city||'—');
-html += ir('Věk',t.age||'—')+ir('Výška',t.height?t.height+' cm':'—');
-html += ir('Noha',t.foot||'—')+ir('Národnost',t.nat||'—')+ir('Cílový klub',t.target||'—');
-html += '</div>';
+// HERO
+h+='<div class="det-hero"><div class="det-name">'+p.name+'</div>';
+h+='<div class="det-tags">'+bdg(p.status)+prdg(p.prog);
+if(p.pos)h+='<span class="tag">'+p.pos+'</span>';
+if(p.age)h+='<span class="tag">'+p.age+' let</span>';
+h+='</div>';
+h+='<label class="fl">Změnit fázi</label>';
+h+='<select class="stsel" onchange="updSt('+p.id+',this.value)">';
+Object.keys(ST).forEach(function(k){h+='<option value="'+k+'"'+(p.status===k?' selected':'')+'>'+ST[k].l+'</option>';});
+h+='</select>';
+h+='<div class="det-btns"><button class="btn btn-dark btn-sm" onclick="startEdit('+p.id+')">✏ Upravit profil</button>';
+h+='<button class="btn btn-red btn-sm" onclick="delPlayer('+p.id+')">🗑 Smazat</button></div></div>';
 
-html += '<div class="detail-box"><h2>Kontakt</h2>';
-var igv = t.ig ? '<a href="https://instagram.com/'+t.ig.replace('@','')+'" target="_blank">'+t.ig+'</a>' : '—';
-html += ir('Instagram',igv)+ir('Telefon',t.phone||'—')+ir('Přidáno',fd(t.added));
-html += '</div>';
+// ── SLOŽKA 1 ──
+h+='<div class="acc"><div class="acc-hdr" onclick="tog(this.parentElement)"><div class="acc-title">📁 Složka 1 — Profil hráče</div><span class="acc-arrow">▶</span></div><div class="acc-body">';
 
-html += '<div class="detail-box"><h2>Videa & odkazy</h2>';
-html += '<div id="vl-'+t.id+'">'+renderVids(t)+'</div>';
-html += '<div style="display:flex;gap:8px;margin-top:8px">';
-html += '<input id="vi-'+t.id+'" placeholder="YouTube, Google Drive, Wyscout..." style="margin:0">';
-html += '<button class="btn btn-grey" style="margin:0;width:auto;white-space:nowrap" onclick="addVid('+t.id+')">+ Přidat</button>';
-html += '</div></div>';
+// Základní info
+var igv=p.ig?'<a href="https://instagram.com/'+p.ig.replace('@','')+'" target="_blank">'+p.ig+'</a>':'—';
+var infoHtml='<div class="igrid"><div>'+ir('Aktuální tým',p.team||'—')+ir('Soutěž',p.league||'—')+ir('Bydliště',p.city||'—')+ir('Věk',p.age||'—')+ir('Výška',p.h?p.h+' cm':'—')+ir('Váha',p.w?p.w+' kg':'—')+ir('Dom. noha',p.foot||'—')+'</div><div>'+ir('Instagram',igv)+ir('Telefon',p.phone||'—')+ir('Program',p.prog==='p'?'Like a PRO':'Hledání angažmá')+ir('Přidáno',fd(p.added))+'</div></div>';
+h+=sacc('info-'+p.id,'📋 Základní informace',infoHtml);
 
-html += '<div class="detail-box"><h2>Poznámky</h2>';
-html += '<textarea id="na-'+t.id+'" class="notes" placeholder="Silné/slabé stránky, dojmy...">'+(t.note||'')+'</textarea>';
+// Video
+var vidHtml='';
+if(p.vid)vidHtml+='<div class="vitem" style="margin-bottom:8px"><span style="color:var(--gold)">▶</span><a href="'+p.vid+'" target="_blank">Hlavní video</a></div>';
+vidHtml+='<div id="vl-'+p.id+'">'+rVids(p)+'</div>';
+vidHtml+='<div class="addrow"><input class="fi" id="vi-'+p.id+'" placeholder="Přidat video odkaz..."><button class="btn btn-dark btn-sm" onclick="addVid('+p.id+')">+ Přidat</button></div>';
+h+=sacc('vid-'+p.id,'🎬 Video & záznamy',vidHtml);
 
-html += ‘<button class="btn btn-gold" id="ns-'+t.id+'" onclick="saveNotes('+t.id+')">💾 Uložit poznámky</button>’;
-html += ‘</div>’;
+// Report
+var repHtml='<textarea class="nota" id="rep-'+p.id+'" placeholder="Scoutingový report — herní styl, silné/slabé stránky...">'+(p.report||'')+'</textarea>';
 
-document.getElementById(‘detail-content’).innerHTML = html;
+repHtml+=’<button class="btn btn-dark btn-sm" id="repsave-'+p.id+'" onclick="saveRep('+p.id+')" style="margin-top:8px;width:100%">💾 Uložit text reportu</button>’;
+repHtml+=’<div style="margin-top:14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--grey);font-weight:700;margin-bottom:8px">Fotky reportu / scanu dokumentů</div>’;
+repHtml+=’<div id="rphotos-'+p.id+'">’+rPhotos(p)+’</div>’;
+repHtml+=’<label style="display:inline-flex;align-items:center;gap:7px;background:var(--dark2);border:1px solid var(--gold);border-radius:7px;padding:9px 14px;cursor:pointer;font-size:13px;color:var(--gold);margin-top:8px;font-family:\'Outfit\',sans-serif;font-weight:600">📷 Přidat fotku reportu<input type="file" accept="image/*" style="display:none" onchange="addPhoto('+p.id+',this)"></label></div>’;
+h+=sacc(‘rep-’+p.id,‘📄 Report pro kluby’,repHtml);
+
+// Poznámky
+var noteHtml=’<textarea class="nota" id="pn-'+p.id+'" placeholder="Interní poznámky, dojmy ze schůzky...">’+(p.note||’’)+’</textarea>’;
+noteHtml+=’<button class="btn btn-dark btn-sm" id="pnsave-'+p.id+'" onclick="savePNote('+p.id+')" style="margin-top:8px;width:100%">💾 Uložit poznámky</button>’;
+h+=sacc(‘pnote-’+p.id,‘✎ Poznámky’,noteHtml);
+
+h+=’</div></div>’;
+
+// ── SLOŽKA 2 ──
+h+=’<div class="acc"><div class="acc-hdr" onclick="tog(this.parentElement)"><div class="acc-title">📁 Složka 2 — Servis & angažmá</div><span class="acc-arrow">▶</span></div><div class="acc-body">’;
+
+// Checklist
+var chkHtml=chk(p.id,‘poj’,p.poj,‘🛡 Pojištění’)+chk(p.id,‘prace’,p.prace,‘💼 Práce’)+chk(p.id,‘byd’,p.byd,‘🏠 Bydlení’)+chk(p.id,‘sp’,p.sp,‘📦 Starterpack připraven’)+chk(p.id,‘sp_sent’,p.sp_sent,‘📬 Starterpack odeslán’);
+h+=sacc(‘chk-’+p.id,‘✅ Zajištěné služby’,chkHtml);
+
+// Angažmá
+var angHtml=’<div class="f3">’;
+angHtml+=’<div class="fg"><label>Tým v angažmá</label><input class="fi" value="'+(p.ang_team||'')+'" placeholder="TSV Příklad" onchange="saveDF('+p.id+',\'ang_team\',this.value)"></div>’;
+angHtml+=’<div class="fg"><label>Soutěž</label><input class="fi" value="'+(p.ang_league||'')+'" placeholder="Kreisliga" onchange="saveDF('+p.id+',\'ang_league\',this.value)"></div>’;
+angHtml+=’<div class="fg"><label>Provize (€)</label><input class="fi" value="'+(p.provize||'')+'" placeholder="500" onchange="saveDF('+p.id+',\'provize\',this.value)"></div>’;
+angHtml+=’</div>’;
+h+=sacc(‘ang-’+p.id,‘⚽ Informace o angažmá’,angHtml);
+
+// Statistiky
+var statHtml=’<div class="f2" style="margin-bottom:8px">’;
+statHtml+=’<div class="fg"><label>Datum</label><input type="date" class="fi" id="md-'+p.id+'"></div>’;
+statHtml+=’<div class="fg"><label>Soupeř / soutěž</label><input class="fi" id="ms-'+p.id+'" placeholder="TSV vs FK..."></div>’;
+statHtml+=’</div><div class="f3" style="margin-bottom:8px">’;
+statHtml+=’<div class="fg"><label>Hrál?</label><select class="fs" id="mh-'+p.id+'"><option value="ano">Ano</option><option value="ne">Ne</option></select></div>’;
+statHtml+=’<div class="fg"><label>Minuty</label><input type="number" class="fi" id="mm-'+p.id+'" placeholder="90"></div>’;
+statHtml+=’<div class="fg"><label>Góly</label><input type="number" class="fi" id="mg-'+p.id+'" placeholder="0"></div>’;
+statHtml+=’</div><div class="f2" style="margin-bottom:10px">’;
+statHtml+=’<div class="fg"><label>Karta</label><select class="fs" id="mk-'+p.id+'"><option value="zadna">Žádná</option><option value="zluta">🟡 Žlutá</option><option value="cervena">🔴 Červená</option></select></div>’;
+statHtml+=’<div class="fg" style="display:flex;align-items:flex-end"><button class="btn btn-gold" style="width:100%" onclick="addMatch('+p.id+')">+ Přidat zápas</button></div>’;
+statHtml+=’</div><div id="match-list-'+p.id+'">’+rMatches(p)+’</div>’;
+h+=sacc(‘stat-’+p.id,‘📊 Statistiky ze zápasů’,statHtml);
+
+// Faktury
+var fakHtml=’<div class="f3" style="margin-bottom:8px">’;
+fakHtml+=’<div class="fg"><label>Název faktury</label><input class="fi" id="fn-'+p.id+'" placeholder="Provize únor 2025"></div>’;
+fakHtml+=’<div class="fg"><label>Částka (€)</label><input type="number" class="fi" id="fc-'+p.id+'" placeholder="500"></div>’;
+fakHtml+=’<div class="fg"><label>Stav</label><select class="fs" id="fs-'+p.id+'"><option value="Odeslana">Odeslána</option><option value="Proplacena">Proplacena</option></select></div>’;
+fakHtml+=’</div><button class="btn btn-dark btn-sm" onclick="addFak('+p.id+')" style="margin-bottom:10px;width:100%">+ Přidat fakturu</button>’;
+fakHtml+=’<div id="fak-list-'+p.id+'">’+rFaktury(p)+’</div>’;
+h+=sacc(‘fak-’+p.id,‘🧾 Faktury’,fakHtml);
+
+// Poznámky složka 2
+var note2Html=’<textarea class="nota" id="pn2-'+p.id+'" placeholder="Poznámky k angažmá, komunikace s klubem, dohodnuté podmínky...">’+(p.note2||’’)+’</textarea>’;
+note2Html+=’<button class="btn btn-dark btn-sm" id="pn2save-'+p.id+'" onclick="savePNote2('+p.id+')" style="margin-top:8px;width:100%">💾 Uložit poznámky</button>’;
+h+=sacc(‘note2-’+p.id,‘✎ Poznámky k angažmá’,note2Html);
+
+h+=’</div></div>’;
+
+if(g(‘dc’))g(‘dc’).innerHTML=h;
 }
 
-function ir(k,v){
-return ‘<div class="info-row"><span class="info-key">’+k+’</span><span class="info-val">’+v+’</span></div>’;
-}
-
-function renderVids(t){
-if(!t.videos||!t.videos.length) return ‘<p style="color:#555;font-size:13px">Zatím žádná videa</p>’;
-return t.videos.map(function(v,i){
-var m = v.match(/(?:v=|youtu.be/)([^&?/]+)/);
-var e = m ? ‘<iframe class="vembed" src="https://www.youtube.com/embed/'+m[1]+'" allowfullscreen></iframe>’ : ‘’;
-return e+’<div class="video-item"><a href="'+v+'" target="_blank">’+v+’</a><button class="vdel" onclick="remVid('+t.id+','+i+')">✕</button></div>’;
-}).join(’’);
-}
-
-function addVid(id){
-var inp = document.getElementById(‘vi-’+id);
-var url = (inp.value||’’).trim();
-if(!url) return;
-var t = DB.talents.filter(function(x){return x.id===id;})[0];
-if(!t) return;
-if(!t.videos) t.videos = [];
-t.videos.push(url);
-inp.value = ‘’;
-document.getElementById(‘vl-’+id).innerHTML = renderVids(t);
-saveCloud();
-}
-
-function remVid(id,idx){
-var t = DB.talents.filter(function(x){return x.id===id;})[0];
-if(!t) return;
-t.videos.splice(idx,1);
-document.getElementById(‘vl-’+id).innerHTML = renderVids(t);
-saveCloud();
-}
-
-function saveNotes(id){
-var t = DB.talents.filter(function(x){return x.id===id;})[0];
-if(!t) return;
-t.note = document.getElementById(‘na-’+id).value;
-var b = document.getElementById(‘ns-’+id);
-if(b){ b.textContent=‘✓ Uloženo!’; setTimeout(function(){b.textContent=‘💾 Uložit poznámky’;},1800); }
-saveCloud();
-}
-
-// INQUIRY
-function saveInq(){
-var name = document.getElementById(‘i-name’).value.trim();
-if(!name){alert(‘Vyplňte jméno!’);return;}
-DB.inquiries.unshift({
-id:Date.now(), name:name,
-platform: document.getElementById(‘i-plat’).value,
-message: document.getElementById(‘i-msg’).value.trim(),
-contact: document.getElementById(‘i-contact’).value.trim(),
-priority: document.getElementById(‘i-prio’).value,
-unread:true, added:new Date().toISOString()
-});
-logA(‘Nová poptávka od <strong>’+name+’</strong>’,’#6a9fd8’);
-document.getElementById(‘form-inq’).style.display=‘none’;
-[‘i-name’,‘i-msg’,‘i-contact’].forEach(function(id){document.getElementById(id).value=’’;});
-renderInbox(); renderDash(); saveCloud();
-}
-
-function convInq(id){
-var inq = DB.inquiries.filter(function(x){return x.id===id;})[0];
-if(!inq) return;
-var t = {id:Date.now(),name:inq.name,age:’’,pos:‘Jiné’,status:‘new’,
-team:’’,league:’’,city:’’,nat:’’,ig:inq.contact||’’,phone:’’,
-height:’’,foot:’’,target:’’,note:‘Poptávka přes ‘+inq.platform+’: ‘+inq.message,
-videos:[],added:new Date().toISOString()};
-DB.talents.unshift(t);
-DB.inquiries = DB.inquiries.filter(function(x){return x.id!==id;});
-logA(’<strong>’+inq.name+’</strong> převeden z poptávky’,’#4caf7d’);
-renderDash(); saveCloud(); openDetail(t.id);
-}
-
-function delInq(id){
-DB.inquiries = DB.inquiries.filter(function(x){return x.id!==id;});
-renderInbox(); renderDash(); saveCloud();
-}
-
-function markRead(id){
-var inq = DB.inquiries.filter(function(x){return x.id===id;})[0];
-if(inq){ inq.unread=false; renderInbox(); saveCloud(); }
-}
-
-// NOTE
+// NOTES
 function saveNote(){
-var title = document.getElementById(‘n-title’).value.trim();
-var text = document.getElementById(‘n-text’).value.trim();
-if(!title&&!text) return;
-DB.notes.unshift({id:Date.now(),title:title||‘Poznámka’,text:text,
-author:document.getElementById(‘n-auth’).value,added:new Date().toISOString()});
-document.getElementById(‘form-note’).style.display=‘none’;
-document.getElementById(‘n-title’).value=’’;
-document.getElementById(‘n-text’).value=’’;
-renderNotes(); saveCloud();
+var t=g(‘n-title’).value.trim(),x=g(‘n-text’).value.trim();if(!t&&!x)return;
+DB.notes.unshift({id:Date.now(),title:t||‘Poznámka’,text:x,author:g(‘n-auth’).value,added:new Date().toISOString()});
+if(g(‘n-title’))g(‘n-title’).value=’’;if(g(‘n-text’))g(‘n-text’).value=’’;
+rNotes();save();
 }
-
-function delNote(id){
-DB.notes = DB.notes.filter(function(x){return x.id!==id;});
-renderNotes(); saveCloud();
-}
+function delNote(id){DB.notes=DB.notes.filter(function(x){return x.id!==id;});rNotes();save();}
 
 // FILTER
-function setFilter(f,btn){
-currentFilter = f;
-document.querySelectorAll(’.fb’).forEach(function(b){b.classList.remove(‘on’);});
-btn.classList.add(‘on’);
-renderPlayers();
+function setF(f,btn){
+cf=f;document.querySelectorAll(’.fb’).forEach(function(b){b.classList.remove(‘on’);});
+btn.classList.add(‘on’);rPlayers();
 }
 
 // RENDERS
-function renderPlayers(){
-var el = document.getElementById(‘players-list’);
-if(!el) return;
-var list = DB.talents;
-if(currentFilter!==‘all’) list = list.filter(function(t){return t.status===currentFilter;});
-if(!list.length){el.innerHTML=’<div class="empty">Žádní hráči. Přidej prvního!</div>’;return;}
-el.innerHTML = list.map(function(t){
-var st = ST[t.status]||ST.new;
-return ‘<div class="card" onclick="prevTab=\'players\';openDetail('+t.id+')">’
-+’<h3>’+t.name+’</h3>’
-+’<p>’+badge(t.status)+(t.pos?’ <span class="badge" style="background:#222;color:#aaa">’+t.pos+’</span>’:’’)+(t.age?’ · ‘+t.age+’ let’:’’)+’</p>’
-+(t.team?’<p>⚽ ‘+t.team+(t.league?’ · ‘+t.league:’’)+’</p>’:’’)
-+(t.city?’<p>📍 ‘+t.city+’</p>’:’’)
+function rPlayers(){
+var el=g(‘pl’);if(!el)return;
+var list=DB.players;
+if(cf!==‘all’)list=list.filter(function(p){return p.status===cf;});
+if(!list.length){el.innerHTML=’<div class="empty">Žádní hráči’+(cf!==‘all’?’ v této fázi’:’. Přidej prvního výše!’)+’</div>’;return;}
+el.innerHTML=list.map(function(p){
+var st=ST[p.status]||ST.s1;
+return’<div class="pcard" onclick="prevT=\'players\';openDetail('+p.id+')">’
++’<div class="pcard-bar" style="background:'+st.col+'"></div>’
++’<div class="pcard-name">’+p.name+’</div>’
++’<div class="pcard-row">’+bdg(p.status)+prdg(p.prog)+(p.pos?’<span class="tag">’+p.pos+’</span>’:’’)+(p.age?’<span class="tag">’+p.age+’ let</span>’:’’)+’</div>’
++(p.team?’<div class="pcard-meta">⚽ ‘+p.team+(p.league?’ · ‘+p.league:’’)+’</div>’:’’)
++(p.city?’<div class="pcard-meta">📍 ‘+p.city+’</div>’:’’)
 +’</div>’;
 }).join(’’);
 }
 
-function renderInbox(){
-var el = document.getElementById(‘inbox-list’);
-if(!el) return;
-if(!DB.inquiries.length){el.innerHTML=’<div class="empty">Zatím žádné poptávky</div>’;return;}
-el.innerHTML = DB.inquiries.map(function(inq){
-return ‘<div class="card" style="cursor:default'+(inq.unread?';border-left:3px solid #c9a84c':'')+'">’
-+’<div style="display:flex;justify-content:space-between"><h3>’+inq.name+’</h3><span style="color:#555;font-size:12px">’+fd(inq.added)+’</span></div>’
-+’<p>📱 ‘+inq.platform+’ · ‘+(inq.contact||’—’)+’ · ‘+inq.priority+’</p>’
-+’<p style="color:#aaa;margin:6px 0">’+(inq.message||’<i>Bez zprávy</i>’)+’</p>’
-+’<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">’
-+’<button class="btn btn-grey" style="margin:0;width:auto" onclick="convInq('+inq.id+')">➕ Přidat jako hráče</button>’
-+(inq.unread?’<button class="btn btn-grey" style="margin:0;width:auto" onclick="markRead('+inq.id+')">✓ Přečteno</button>’:’’)
-+’<button class="btn btn-red" style="margin:0;width:auto" onclick="delInq('+inq.id+')">Smazat</button>’
-+’</div></div>’;
-}).join(’’);
-}
-
-function renderNotes(){
-var el = document.getElementById(‘notes-list’);
-if(!el) return;
+function rNotes(){
+var el=g(‘nl’);if(!el)return;
 if(!DB.notes.length){el.innerHTML=’<div class="empty">Žádné poznámky</div>’;return;}
-el.innerHTML = DB.notes.map(function(n){
-return ‘<div class="card" style="cursor:default">’
-+’<div style="display:flex;justify-content:space-between;align-items:center">’
-+’<h3>’+n.title+’</h3>’
-+’<button class="btn btn-red" style="margin:0;width:auto;padding:6px 10px" onclick="delNote('+n.id+')">✕</button>’
-+’</div>’
-+’<p style="color:#666;font-size:12px">’+n.author+’ · ‘+fd(n.added)+’</p>’
-+’<p style="color:#aaa;margin-top:8px;white-space:pre-wrap">’+n.text+’</p>’
-+’</div>’;
+el.innerHTML=DB.notes.map(function(n){
+return’<div class="acc" style="border-color:var(--grey3)">’
++’<div class="acc-hdr" onclick="tog(this.parentElement)">’
++’<div class="acc-title" style="color:var(--white)">’+n.title+’ <span style="font-size:11px;color:var(--grey);font-weight:400">’+n.author+’ · ‘+fd(n.added)+’</span></div>’
++’<div style="display:flex;align-items:center;gap:8px"><button class="btn btn-red btn-sm" onclick="event.stopPropagation();delNote('+n.id+')" style="padding:4px 8px">✕</button><span class="acc-arrow">▶</span></div>’
++’</div><div class="acc-body"><div style="white-space:pre-wrap;font-size:13px;color:#bbb">’+n.text+’</div></div></div>’;
 }).join(’’);
 }
 
-function renderDash(){
-var g = function(id){return document.getElementById(id);};
-if(g(‘st0’)) g(‘st0’).textContent = DB.talents.length;
-if(g(‘st1’)) g(‘st1’).textContent = DB.talents.filter(function(t){return t.status===‘signed’||t.status===‘placed’;}).length;
-if(g(‘st2’)) g(‘st2’).textContent = DB.inquiries.filter(function(i){return i.unread;}).length;
-if(g(‘st3’)) g(‘st3’).textContent = DB.talents.filter(function(t){return t.status===‘casting’;}).length;
+function rDash(){
+if(g(‘st-all’))g(‘st-all’).textContent=DB.players.length;
 
-var ap = g(‘dash-pipeline’);
-if(ap){
-if(!DB.talents.length){ap.innerHTML=’<p style="color:#555">Zatím žádní hráči</p>’;return;}
-var counts = {};
-DB.talents.forEach(function(t){counts[t.status]=(counts[t.status]||0)+1;});
-ap.innerHTML = Object.keys(counts).map(function(s){
-return ‘<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #222">’
-+badge(s)+’<strong>’+counts[s]+’</strong></div>’;
+// Phase grid — všechny fáze jednou
+var pg=g(‘phase-grid’);
+if(pg){
+pg.innerHTML=Object.keys(ST).map(function(k){
+var n=DB.players.filter(function(p){return p.status===k;}).length;
+return’<div class="ptile" style="--c:'+ST[k].col+'" onclick="goF(\''+k+'\')">’
++’<div class="ptile-n">’+n+’</div><div class="ptile-l">’+ST[k].l+’</div></div>’;
 }).join(’’);
 }
 
-var aa = g(‘dash-activity’);
-if(aa){
-if(!DB.activities.length){aa.innerHTML=’<p style="color:#555">Zatím žádná aktivita</p>’;return;}
-aa.innerHTML = DB.activities.slice(0,8).map(function(a){
-return ‘<div class="activity-item">’
-+’<div class="adot" style="background:'+a.col+'"></div>’
-+’<div><div style="font-size:13px;color:#aaa">’+a.txt+’</div>’
-+’<div style="font-size:11px;color:#555">’+a.t+’</div></div>’
-+’</div>’;
-}).join(’’);
-}
+var da=g(‘da’);
+if(da){if(!DB.activities.length)da.innerHTML=’<div class="empty" style="padding:8px">Zatím žádná aktivita</div>’;
+else da.innerHTML=DB.activities.slice(0,8).map(function(a){return’<div class="aitem"><div class="adot" style="background:'+a.col+'"></div><div><div class="atext">’+a.txt+’</div><div class="atime">’+a.ts+’</div></div></div>’;}).join(’’);}
 }
 
-function renderAll(){
-renderDash(); renderPlayers(); renderInbox(); renderNotes();
-}
+function renderAll(){rDash();rPlayers();rNotes();}
 
 function exportCSV(){
-var cols = [‘Jméno’,‘Tým’,‘Soutěž’,‘Status’,‘Věk’,‘Město’,‘Pozice’,‘Instagram’,‘Telefon’,‘Cílový klub’,‘Přidáno’];
-var rows = DB.talents.map(function(t){
-return [t.name,t.team||’’,t.league||’’,ST[t.status]?ST[t.status].l:t.status,
-t.age||’’,t.city||’’,t.pos||’’,t.ig||’’,t.phone||’’,t.target||’’,fd(t.added)
-].map(function(v){return ‘”’+String(v).replace(/”/g,’””’)+’”’;}).join(’,’);
-});
-var csv = ‘\uFEFF’+[cols.join(’,’)].concat(rows).join(’\n’);
-var blob = new Blob([csv],{type:‘text/csv;charset=utf-8’});
-var url = URL.createObjectURL(blob);
-var a = document.createElement(‘a’);
-a.href=url; a.download=‘vbesta-hraci.csv’; a.click();
-URL.revokeObjectURL(url);
+var cols=[‘Jméno’,‘Fáze’,‘Program’,‘Tým’,‘Soutěž’,‘Věk’,‘Bydliště’,‘Pozice’,‘Výška’,‘Váha’,‘Dom. noha’,‘Instagram’,‘Telefon’,‘Ang. tým’,‘Ang. soutěž’,‘Provize €’,‘Přidáno’];
+var rows=DB.players.map(function(p){return[p.name,ST[p.status]?ST[p.status].l:’’,p.prog===‘p’?‘Like a PRO’:‘Hledání angažmá’,p.team||’’,p.league||’’,p.age||’’,p.city||’’,p.pos||’’,p.h||’’,p.w||’’,p.foot||’’,p.ig||’’,p.phone||’’,p.ang_team||’’,p.ang_league||’’,p.provize||’’,fd(p.added)].map(function(v){return’”’+String(v).replace(/”/g,’””’)+’”’;}).join(’,’);});
+var csv=’\uFEFF’+[cols.join(’,’)].concat(rows).join(’\n’);
+var blob=new Blob([csv],{type:‘text/csv;charset=utf-8’});var url=URL.createObjectURL(blob);
+var a=document.createElement(‘a’);a.href=url;a.download=‘vbesta-hraci.csv’;a.click();URL.revokeObjectURL(url);
 }
 
-setInterval(function(){if(!saving)loadCloud();},20000);
-lsLoad(); renderAll(); loadCloud();
+setInterval(function(){if(!saving)cloud();},20000);
+lsL();renderAll();cloud();
 </script>
 
 </body>
